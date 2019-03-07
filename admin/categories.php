@@ -15,40 +15,24 @@
                             Welcome, Admin. Manage Your Mischief.
                             <small> I Solemnly Swear That I am Up to No Good</small>
                         </h1>
-                    <div class="col-xs-6">
-                        <label for="cat-title">New Category</label>
                     
-                    <!-- Add Category Form -->
-<?php
-if(isset($_POST['submit'])) {
-$cat_title = $_POST['cat_title'];
-if($cat_title == "" || empty($cat_title)) {
-    echo "This field should not be empty";
-}else{
-    $query = "INSERT INTO categories(cat_title)";
-    $query .= "VALUES('{$cat_title}')";
-
-    $create_category_query = mysqli_query($connection, $query);
-
-    if(!$create_category_query){
-        die('QUERY FAILED' . mysqli_error($connection));
-    }
-}
-
-}
- ?>
+                    <div class="col-xs-6">
+                   <!-- Add Category Form -->
+<?php addCategory(); ?>
                        <form  action="" method="post">
                         <div class="form-group"> 
-                        
+                        <label for="cat-title">New Category</label>
+                        <input type="text" class="form-control" name="cat_title">
+                        </div>
                          <div class="form-group"> 
                             <input class="btn btn-primary" type="submit" name="submit" value="Add Category">
                         </div>
                        </form>
 
-<?php if(isset($_GET['edit'])){
-    $cat_id = $_GET['edit'];
-    include "includes/update_categories.php";
-    } ?>
+<?php 
+editCategories();
+    //If edit button link in table is clicked, run this function that handles logic for updating that category
+    ?>
                    </div>
 
                  <!-- category table --> 
@@ -63,32 +47,12 @@ if($cat_title == "" || empty($cat_title)) {
                          </tr>
                      </thead>
                      <tbody>
-<?php 
 
-// FIND ALL CATEGORIES QUERY AND DISPLAY IN TABLE 
-$query = "SELECT * FROM categories";
-$select_categories = mysqli_query($connection,$query);
-     while ($row = mysqli_fetch_assoc($select_categories )) {
-     $cat_id = $row['cat_id'];
-     $cat_title = $row['cat_title'];
-     echo "<tr>";
-     echo "<td>{$cat_id}</td>";
-     echo "<td>{$cat_title}</td>";
-     echo "<td><a href='categories.php?delete={$cat_id}'>Delete</a></td>";//Link to create a Query generated via GET to delete a category by ID
-     echo "<td><a href='categories.php?edit={$cat_id}'>Edit</a></td>";
-     echo "</tr>";
-    }
- ?>
 
- <?php
- //DELETE CATEGORY QUERY
-if(isset($_GET['delete'])){
- $get_cat_id = $_GET['delete'];
- $query = "DELETE FROM categories WHERE cat_id = {$get_cat_id}";
- $delete_query = mysqli_query($connection, $query);
- header("Location: categories.php");
-}
- ?>
+<?php displayAllCategories(); //put all categories in a  table with edit and delete links that triggers the other types of queries  ?>
+<?php deleteCategories(); //DELETE CATEGORY QUERY ?>
+   
+
                        
                      </tbody>
                     </table>
@@ -101,10 +65,10 @@ if(isset($_GET['delete'])){
                 <!-- /.row -->
 
             </div>
-            <!-- /.container-fluid -->
+            <!-- #page-wrapper -->
 
         </div>
-        <!-- /#page-wrapper -->
+        <!-- /#wrapper -->
 
 
 <?php include "includes/admin_footer.php"; ?> 
