@@ -22,6 +22,7 @@ if(isset($_POST['create_post'])) {
      $sendPostQuery = mysqli_query($connection, $query);
 
      queryConnect($sendPostQuery); //from functions.php - runs a die() function with mysqli_query() function stored as a parameter containing our connection and query
+     header("Location: posts.php");
 	}
 ?>
 

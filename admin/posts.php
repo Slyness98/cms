@@ -29,9 +29,6 @@ break;
 case 'edit_post';
 include "includes/editPost.php";
 break;
-case '100';
-echo '100';
-break;
 default:
 include "includes/viewAllPosts.php";
 
