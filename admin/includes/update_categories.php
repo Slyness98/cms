@@ -1,3 +1,5 @@
+    <!-- can possibly delete file now that functions.php includes this code in editCategories() function -->
+
       <form  action="" method="post">
 
         <label for="cat-title">Edit Category</label>

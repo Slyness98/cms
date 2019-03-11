@@ -33,7 +33,8 @@
  <?php  
  	 while ($row = mysqli_fetch_assoc($select_all)) {
      $cat_title = $row['cat_title'];
-     echo "<li><a href='#''>{$cat_title}</a></li>";
+     $cat_id = $row['cat_id'];
+     echo "<li name='category'><a href='postsByCategory.php?category=$cat_id'>{$cat_title}</a></li>";
     }
  ?>
                              

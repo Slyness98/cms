@@ -1,4 +1,4 @@
- <?php include "includes/db.php";  ?>
+ 
 
  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
@@ -11,7 +11,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Start Bootstrap</a>
+                <a class="navbar-brand" href="index.php">The Contriving Coder</a>
             </div>
             
             
@@ -29,6 +29,9 @@
                 }
 
                 ?>
+                <li>
+                        <a href="../cms/categories.php">Categories</a>
+                    </li>
                   <li>
                         <a href="admin">Admin</a>
                     </li>
