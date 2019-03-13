@@ -15,9 +15,11 @@
             </h1>
             <?php  
                 
-                $query = "SELECT * FROM posts";
+                $query = "SELECT * FROM posts WHERE post_status = 'published' ORDER BY post_id DESC";
                 $query_all_posts = mysqli_query($connection,$query);
-
+                   if($query_all_posts->num_rows==0){
+                    echo "<h1 class='text-center'>Sorry, nothing relevant was found.</h1>";
+                    }else{
                 while ($row = mysqli_fetch_assoc($query_all_posts)) {
                  $post_id = $row['post_id'];
                  $post_title = $row['post_title'];
@@ -25,6 +27,9 @@
                  $post_date = $row['post_date'];
                  $post_image = $row['post_image'];
                  $post_content = substr($row['post_content'],0,100); //display an excerpt by taking the content and only displaying a substring of the first 100 characters
+                 
+              
+                
             ?>
             <!-- Blog Post Structure -->
             <h2>
@@ -42,7 +47,7 @@
             <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
             <hr>
-            <?php }  //closes off the while loop querying all post information. The HTML code is now automatically replecated for each new post by being encased in this loop.  ?>
+            <?php }}  //closes off the else consition and while loop querying all post information. The HTML code is now automatically replecated for each new post by being encased in this loop.  ?>
             </div>
         
             <!-- Blog Sidebar Widgets Column -->

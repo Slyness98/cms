@@ -1,4 +1,4 @@
-?php ob_start(); ?>
+<?php ob_start(); ?>
 <?php include "includes/admin_header.php"; ?>
 
     <div id="wrapper">
@@ -27,8 +27,8 @@ case 'add_post';
 include "includes/addPost.php";
 break;
 case 'edit_post';
-include "includes/editPost.php";
-break;
+include "includes/edit.php";
+break; 
 default:
 include "includes/viewAllComments.php";
 
