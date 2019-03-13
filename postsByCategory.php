@@ -1,7 +1,7 @@
 <?php include "includes/header.php"; ?>
     <!-- Navigation -->
    
-<?php include "includes/navigation.php" ?>
+<?php include "includes/navigation.php"; ?>
     <!-- Page Content -->
     <?php 
     //fetch the category URL parameter we pass
@@ -10,15 +10,18 @@
             }
                 
                 //Preload the post information for further usage in the while loop down below
-                $query = "SELECT * FROM posts WHERE post_category_id = $category";
+                $query = "SELECT * FROM posts WHERE post_category_id = $category AND post_status = 'published'";
                 $query_all_posts = mysqli_query($connection,$query);
+
     
 //seperate query for selecting the category title so we can dynamically change the heading title on the fly and match it to the category the user is viewing
     $catQuery= "SELECT * FROM categories WHERE cat_id = $category ";
     $query_cat_title = mysqli_query($connection,$catQuery);
-    while ($catRow = mysqli_fetch_assoc($query_cat_title)) {
-                 $cat_title = $catRow['cat_title'];
-}
+    $catRow = mysqli_fetch_assoc($query_cat_title);
+    $cat_title = $catRow['cat_title'];
+
+
+
     ?>
     <div class="container">
 
@@ -27,11 +30,14 @@
             <!-- Blog Entries Column -->
             <div class="col-md-8">
             <h1 class="page-header">
-                <?php echo $cat_title ?>
-             <small>Secondary Text</small>
+                <?php echo $cat_title; ?>
             </h1>
+             <small>Secondary Text</small>
+            
             <?php  
-           
+           if($query_all_posts->num_rows==0){
+                    echo "<h1 class='text-center'>Sorry, nothing relevant was found.</h1>";
+                    }else{
 
                 while ($row = mysqli_fetch_assoc($query_all_posts)) {
                  $post_id = $row['post_id'];
@@ -46,18 +52,19 @@
                 <a href="post.php?p_id=<?php echo $post_id;?>"><?php echo $post_title; ?></a>
             </h2>
             <p class="lead">
-                by <a href="about.php"> <?php echo $post_author ?> </a>
+                by <a href="about.php"> <?php echo $post_author; ?> </a>
             </p>
-            <p><span class="glyphicon glyphicon-time"></span> Posted on <?php echo $post_date; ?></p>
+            <p><span class="glyphicon glyphicon-time"> Posted on <?php echo $post_date; ?></span></p>
             <hr>
-            <a href="post.php?p_id=<?php echo $post_id?>">
-            <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="featured post image"></a>
+            <a href="post.php?p_id=<?php echo $post_id;?>">
+                <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="featured post image">
+            </a>
             <hr>
             <p><?php echo $post_content; ?></p>
             <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
             <hr>
-            <?php }  //closes off the while loop querying all post information. The HTML code is now automatically replecated for each new post by being encased in this loop.  ?>
+            <?php }}  //closes off the while loop querying all post information. The HTML code is now automatically replecated for each new post by being encased in this loop.  ?>
             </div>
         
             <!-- Blog Sidebar Widgets Column -->
@@ -65,5 +72,5 @@
           </div>
             <!-- /.row -->
  <hr>
-<?php include 'includes/footer.php'; ?>
- <!--footer.php includes closing div for <div class="container">. I felt it was better to only have the seemingly unclosed "container" class instance twice (once in search.php and once in index.php) than to open the class at the end of header.php across the entire CMS, should I ever need to change classes of the outermost div for a certain page. It's best to end header.php with the start of the <body> tag.        
+<?php include "includes/footer.php"; ?>
+</div>

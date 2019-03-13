@@ -31,7 +31,7 @@ if(isset($_POST['update_post'])) {
      $post_image = $_FILES['post_image']['name'];
      $post_image_temp = $_FILES['post_image']['tmp_name'];
      $post_tags = $_POST['post_tags'];
-     $post_content = $_POST['post_content'];
+     $post_content=mysqli_real_escape_string($connection, $_POST['post_content']);
      $post_comment_count = $_POST['post_comment_count'];
      $post_date = $_POST['post_date'];
 

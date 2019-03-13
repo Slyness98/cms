@@ -21,7 +21,7 @@
             <!-- Blog Entries Column -->
             <div class="col-md-8">
             <h1 class="page-header">
-                Latest Posts
+                Categories
              <small>Secondary Text</small>
             </h1>
             <?php  
@@ -33,11 +33,11 @@
         $category = ' ';
     }
     switch($category) {
-default:
-  include "includes/categoriesHome.php";
-break;
-case '$category = $cat_id';//You're close. Either We automatically display the homepage or we grab a list of posts all with the same cat ID. We just need to fix postsByCategory.php to make this work
+case '$category = $cat_id';// We automatically display the homepage or we grab a list of posts all with the same cat ID.
 include "postsByCategory.php";
+break;
+default: 
+  include "includes/categoriesHome.php";
 break;
 }
             ?>
