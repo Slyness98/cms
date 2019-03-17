@@ -1,8 +1,51 @@
 
+
  <div class="col-md-4">
 
+    <?php 
+    if(!isset($_SESSION['username'])){
+        echo "
+            <div class='well'>
+            <h4>Login</h4>
+            <form action='includes/login.php' method='post'>
+            <div class='form-group'>
+                <input name='username' type='text' class='form-control' placeholder='username'>
+            </div>
+            <div class='input-group'>
+                <input name='password' type='password' class='form-control' placeholder='password'>
+                <span class='input-group-btn'>
+                    <button class='btn btn-primary' name='login' type='submit'>Login</button>
+                </span>
+            </div>
+            </div>
+            <!-- /.input-group -->
+        </form><!-- search from -->
+        ";
+    }elseif (isset($_SESSION['username'])) {
+        $username = $_SESSION['username'];
+        echo "
+        <div class='well'
+        <h4>Your Account</h4>
+        <ul class='nav navbar-right top-nav'>
+         <li class='dropdown'>
+                    <a href='#'' class='dropdown-toggle' data-toggle='dropdown'><i class='fa fa-user'></i> $username <b class='caret'></b></a>
+                    <ul class='dropdown-menu'>
+                        <li>
+                            <a href='#'><i class='fa fa-fw fa-user'></i> Profile</a>
+                        </li>
+                     
+                        <li class='divider'></li>
+                        <li>
+                            <a href='includes/logout.php'><i class='fa fa-fw fa-power-off'></i> Log Out</a>
+                        </li>
+                    </ul>
+                </li>
+                </ul>
+            </div>";
+    }
+    ?>
 
-	    <!-- Blog Search Well -->
+	    <!--Submit-- Blog Search Well -->
 	    <div class="well">
 	        <h4>Blog Search</h4>
 	        <form action="search.php" method="post">

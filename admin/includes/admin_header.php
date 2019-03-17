@@ -1,7 +1,20 @@
 <?php ob_start(); ?>
+<?php session_start(); ?>
 <?php 
     include "../includes/db.php";
     include "functions.php";
+?>
+
+
+<?php
+if(isset($_SESSION['role'])) {
+if($_SESSION['role'] == 'subscriber') {
+
+    header("Location: ../index.php");
+}
+
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

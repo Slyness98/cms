@@ -1,4 +1,4 @@
- 
+
 
  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
@@ -33,9 +33,17 @@
                 <li>
                         <a href="../cms/categories.php">Categories</a>
                     </li>
-                  <li>
-                        <a href="admin">Admin</a>
-                    </li>
+               
+                <?php if(isset($_SESSION['role'])) {
+
+                    if($_SESSION['role'] == 'admin'){
+
+
+                 echo" <li>
+                        <a href='admin'>Admin</a>
+                    </li>";
+                }}
+                ?>
                    <!--    <li>
                         <a href="#">Services</a>
                     </li>

@@ -2,11 +2,11 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Author</th>
-                            <th>Title</th>
-                            <th>Category</th>
-                            <th>Status</th>
-                            <th>Image</th>
+                            <th>Username</th>
+                            <th>Firstname</th>
+                            <th>Lastname</th>
+                            <th>Email</th>
+                            <th>Role</th>
                             <th>Tags</th>
                             <th>Comments</th>
                             <th>Date</th>

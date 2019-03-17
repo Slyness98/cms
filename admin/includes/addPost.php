@@ -31,7 +31,7 @@ if(isset($_POST['create_post'])) {
 
 	<div class="form-group">
 		<label for="post_title">Post Title </label>
-		<input type="text" class="form-control" name="title">
+		<input type="text" class="form-control" name="title" required>
 	</div>
 	<div class="form-group">
 		<select name="post_category" id="">
@@ -60,12 +60,12 @@ queryConnect($select_categories);
 
 	<div class="form-group">
 		<label for="post_author">Post Author </label>
-		<input type="text" class="form-control" name="author">
+		<input type="text" class="form-control" name="author" required>
 	</div>
 
 	<div class="form-group">
 		<label for="post_status">Post Status </label>
-		<input type="text" class="form-control" name="post_status">
+		<input type="text" class="form-control" name="post_status" required>
 	</div>
 	<div class="form-group">
 		<label for="post_image">Image </label>
