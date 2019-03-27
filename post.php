@@ -45,7 +45,7 @@
             <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="featured post image">
             <hr>
             <p><?php echo $post_content; ?></p>
-            <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+            
 
             <hr>
             <?php }  //closes off the while loop querying all post information. The HTML code is now automatically replecated for each new post by being encased in this loop.?>
@@ -61,26 +61,27 @@
 
 
 <?php 
-if(isset($_POST['create_comment']))
-{
-
-
-    $comment_author = $_POST['comment_author'];
+if(isset($_POST['create_comment'])){
+  $comment_author = $_POST['comment_author'];
     $comment_email = $_POST['comment_email'];
     $comment_content = $_POST['comment_content'];
 
+  if(!empty($comment_author)&&!empty($comment_email)&&!empty($comment_content)){
     $query = "INSERT INTO comments(comment_post_id, comment_author, comment_email, comment_content, comment_status, comment_date)" ;
 
     $query .= "VALUES('{$post_id}', '{$comment_author}', '{$comment_email}', '{$comment_content}', 'blocked', now())";
 
     $createCommentQuery = mysqli_query($connection, $query);
-    if(!$createCommentQuery){
-        die("QUERY FAILED" . mysqli_error($connection));
-    }
+    queryConnect($createCommentQuery);
+    
 
       $countQuery ="UPDATE posts SET post_comment_count = post_comment_count + 1 WHERE post_id = $post_id";
 
      $updateCommentCount = mysqli_query($connection,$countQuery);
+
+  }else{
+    echo "<script>alert('All fields required. Please fill out all fields.')</script>";
+  }
 }
 
 ?>
