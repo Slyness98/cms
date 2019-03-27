@@ -1,12 +1,79 @@
+ <?php
+ 
+
+if(isset($_POST['checkboxArray'])){
+    foreach($_POST['checkboxArray'] as $checkboxValue) {
+       global $checkboxValue;
+      $bulk_options = clean($_POST['bulk_options']);
+  //checkboxValue carries our post id's from every selected checkbox. 
+    //We use a prepared statement that seperates values that would've been directly injected into SQL using deprecated mysql_* and naked mysqli functions.
+    //We make a hardcoded SQL statement template that then binds the intended values at runtime(based on our switch statement). 
+    //Tampering via SQL injection is rendered impossible. You'd have to gain access to the code through other means in order to tamper with database relations or any of its contents  
+switch ($bulk_options) {
+    case 'published':
+   $sql = "UPDATE posts SET post_status = 'published' WHERE post_id=?";
+    $stmt = mysqli_prepare($connection, $sql);
+    mysqli_stmt_bind_param($stmt, 'i', $checkboxValue);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+    break;
+
+
+
+    case 'draft':
+    $sql = "UPDATE posts SET post_status = 'draft' WHERE post_id=?";
+    $stmt = mysqli_prepare($connection, $sql);
+    mysqli_stmt_bind_param($stmt, 'i', $checkboxValue);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+    break;
+     
+
+
+    case 'delete':
+    $sql = "DELETE FROM posts WHERE post_id=?";
+    $stmt = mysqli_prepare($connection, $sql);
+    mysqli_stmt_bind_param($stmt, 'i', $checkboxValue);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+    break;
+    
+
+
+    default:
+        break;
+}
+}
+}
+ ?>
+
+
+
+ <form action="" method="post">
+    <div id="bulkOptionsContainer" class="col-xs-4">
+        <select class="form-control" name="bulk_options">
+        <option value="">Select Options</option>    
+        <option value="published">Publish</option> 
+        <option value="draft">Draft</option> 
+        <option value="delete">Delete</option> 
+        </select>
+    </div>
+
+
+    <div class="col-xs-4">
+        <input type="submit" name="submit" class="btn btn-success" value="Apply">
+        <a class="btn btn-primary" href="posts.php?source=add_post">Add New</a>
+    </div>
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
+                            <th><input id="selectAllBoxes" type="checkbox">Select All</input></th>
                             <th>ID</th>
-                            <th>Username</th>
-                            <th>Firstname</th>
-                            <th>Lastname</th>
-                            <th>Email</th>
-                            <th>Role</th>
+                            <th>Author</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Image</th>
                             <th>Tags</th>
                             <th>Comments</th>
                             <th>Date</th>
@@ -30,6 +97,7 @@
 
     
      echo "<tr>";
+        echo "<td><input class='checkboxes' type='checkbox' name='checkboxArray[]' value='$post_id'></td>";
         echo "<td>{$post_id}</td>";
         echo "<td>{$post_author}</td>";
         echo "<td><a href='../post.php?p_id={$post_id}'>{$post_title}</a></td>";
@@ -57,7 +125,7 @@
 
 </tbody>
 </table>
-
+</form>
 <?php
 global $connection;
 if(isset($_GET['delete'])) {

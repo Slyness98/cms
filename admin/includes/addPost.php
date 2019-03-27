@@ -22,7 +22,11 @@ if(isset($_POST['create_post'])) {
      $sendPostQuery = mysqli_query($connection, $query);
 
      queryConnect($sendPostQuery); //from functions.php - runs a die() function with mysqli_query() function stored as a parameter containing our connection and query
-     header("Location: posts.php");
+     //header("Location: posts.php");
+
+     $get_post_id = mysqli_insert_id($connection); //this mysqli function grabs the latest ID created and makes the ID of the post just published available to us. We don't have to worry about other types of IDs being grabbed because this fires instantaneously after creating a new post. Nothing in our DB can be more up-to-date. Therefore, only the latest post id can be selected, which is what we want. 
+     echo "<p class='bg-success'>New post created successfully! <a href='../post.php?p_id={$get_post_id}'>View your latest creation, </a><a href='posts.php'>View all publications, or <a href='posts.php?source=add_post'>Add More Posts!</a></p>";
+
 	}
 ?>
 
@@ -34,7 +38,9 @@ if(isset($_POST['create_post'])) {
 		<input type="text" class="form-control" name="title" required>
 	</div>
 	<div class="form-group">
-		<select name="post_category" id="">
+		
+		<select name="post_category" id="" required>
+			<option value="">Post Category</option>
 			
 <?php
 
@@ -64,8 +70,11 @@ queryConnect($select_categories);
 	</div>
 
 	<div class="form-group">
-		<label for="post_status">Post Status </label>
-		<input type="text" class="form-control" name="post_status" required>
+		<select name="post_status" required>
+			<option value="">Post Status</option>
+			<option value="published">Publish</option>
+			<option value="draft">Draft</option>
+		</select>
 	</div>
 	<div class="form-group">
 		<label for="post_image">Image </label>
@@ -77,7 +86,7 @@ queryConnect($select_categories);
 	</div>
 	<div class="form-group">
 		<label for="post_content">Post Content </label>
-		<textarea type="text" class="form-control" name="post_content" id="" cols="30" rows="10">
+		<textarea type="text" class="form-control" name="post_content" id="body" cols="30" rows="10">
 		</textarea>
 	</div>
 

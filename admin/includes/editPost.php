@@ -115,7 +115,10 @@ queryConnect($select_categories);
 
 	<div class="form-group">
 		<label for="post_status">Post Status </label>
-		<input value="<?php echo $post_status; ?>" type="text" class="form-control" name="post_status">
+	<select name="post_status" id="">
+            <option value="draft" <?php if($post_status == 'draft'){echo "selected";} ?>>Draft</option>
+            <option value="published" <?php if($post_status == 'published'){echo "selected";} ?>>Published</option>
+        </select>
 	</div>
 	<div class="form-group">
 		<label for="post_tags">Comments </label>
