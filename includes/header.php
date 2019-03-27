@@ -1,4 +1,6 @@
 <?php include "db.php";   ?>
+<?php include "admin/functions.php"; ?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,9 +14,12 @@
 
     <title>The Contriving Coder</title>
 
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
     <!-- Custom CSS -->
     <link href="css/blog-home.css" rel="stylesheet">
 

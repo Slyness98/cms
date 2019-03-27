@@ -45,6 +45,10 @@ if($_SESSION['role'] == 'subscriber') {
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
+ 
 </head>
 
 <body>
