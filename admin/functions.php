@@ -1,6 +1,8 @@
 <?php 
 
   function queryConnect($result) {
+    //this function takes the connection and query parameters passed through mysqli_query() and should either one of them cause an error when attempting
+    // to run the SQL statement, we make sure we recieve an error report about what went wrong with our connection at runtime.
   	global $connection;
   	if(!$result) {
   		die("QUERY FAILED ." . mysqli_error($connection));
@@ -8,6 +10,22 @@
   } 
 
 
+function generateQuery($sql){
+  global $connection;
+  //Pass a query as a parameter and it runs through the DB. General purpose function to avoid this repetitive PHP pattern all over the CMS. It's used often enough to warrant its own function in order to avoid expressing the following lines EVERYWHERE. 
+
+    $sendQuery = mysqli_query($connection, $sql);
+    queryConnect($sendQuery); 
+    
+
+  
+}
+
+function selectQuery($column, $table){
+  $query = "SELECT {$column} FROM {$table}";
+  generateQuery($query);
+
+}
 
 
   //--------------------------------FUNCTIONS FOR CATEGORIES ----------------------------------------------------------//
@@ -106,7 +124,7 @@
   <?php
   }
   ?>
-<!-- --------------------------------------Functions For Comments ---------------------------------------------------- -->
+
 <?php
 
   function updateCommentStatus(){
@@ -229,4 +247,39 @@ function deleteUser(){
 }
 header("Location: users.php");
 }
+
+// -------------------------------------------Stat Funtions--------------------------------------------------------------------------
+
+
+function contentCount($table){
+  global $connection;
+  $query = "SELECT * FROM {$table}";
+  $select_all = mysqli_query($connection, $query);
+  queryConnect($select_all);
+
+  $count = mysqli_num_rows($select_all);
+  return $count;
+}
+
+function customContentCount($table, $column, $value){
+  global $connection;
+  $query = "SELECT * FROM {$table} WHERE {$column} = {$value}";
+
+  $sendQuery = mysqli_query($connection, $query);
+   queryConnect($sendQuery);
+  $count = mysqli_num_rows($sendQuery);
+  return $count;
+}
+
+
+
+
+// --------------------------------------Security Functions---------------------------------------------------------------
+function clean($param){
+    global $connection;
+$cleaned = mysqli_real_escape_string($connection, trim(strip_tags($param))); //escape in context to our connection and trim excess tags maliciously added on, leaving only the data that was meant to be processed. 
+return $cleaned;
+
+}
+
 ?>

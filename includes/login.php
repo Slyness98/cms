@@ -8,8 +8,8 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 
 //run username and password throught real escape function to clean input and ready it for data insertion. The function helps prevent SQL injection through fields that take in user input
-$username = mysqli_real_escape_string($connection, $username);
-$password = mysqli_real_escape_string($connection, $password);
+$username = clean($username);
+$password = clean($password);
 
 $query = "SELECT * FROM users WHERE user_username = '{$username}' ";
 $select_user_query = mysqli_query($connection, $query);
@@ -22,12 +22,13 @@ while($row = mysqli_fetch_assoc($select_user_query)) {
 	$user_lastName = $row['user_lastName'];
 	$user_role = $row['user_role'];
 }
+// $salt='$2y$10$38ZXqVh68gKdqiKhBoHBBa';
+// $password = crypt($password, $salt);
 
-
-
-if($username !== $user_username && $password !== $user_password){
-	header("Location: ../index.php");
-} elseif ($username == $user_username && $password == $user_password) {
+// if($username !== $user_username && $password !== $user_password){
+// 	header("Location: ../index.php");
+// } elseif ($username == $user_username && $password == $user_password) {
+if (password_verify($password, $user_password)) {
 	$_SESSION['username'] = $user_username;
 	$_SESSION['firstname'] = $user_firstName;
 	$_SESSION['lastname'] = $user_lastName;
