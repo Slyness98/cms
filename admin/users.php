@@ -9,12 +9,13 @@
  <?php include "includes/admin_navigation.php"; ?>
 
                 <!-- Page Heading -->
+                 <h1 class="page-header">
+                            Welcome, <?php echo $_SESSION['firstname']; ?>. Manage Your Mischief.
+                            <small> I Solemnly Swear That I Am Up to No Good</small>
+                        </h1>
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Welcome, Admin. Manage Your Mischief.
-                            <small> I Solemnly Swear That I am Up to No Good</small>
-                        </h1>
+                       
                     
   <?php 
     if(isset($_GET['source'])) {
