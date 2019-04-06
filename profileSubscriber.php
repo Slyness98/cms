@@ -4,49 +4,50 @@
 if(isset($_SESSION['username'])) {
 	$username = $_SESSION['username'];
 
-	$query = "SELECT * FROM users WHERE user_username = '{$username}' ";
-	$profile_query = mysqli_query($connection, $query);
-	while($row = mysqli_fetch_assoc($profile_query)) {
-		$user_id = $row['user_id'];
-	     $user_firstName = $row['user_firstName'];
-	     $user_lastName = $row['user_lastName'];
-	     $user_username = $row['user_username'];
-	     $user_password = $row['user_password'];
-	    
-	     $user_email = $row['user_email'];
-	     $user_role = $row['user_role'];
+	// $query = "SELECT * FROM users WHERE user_username = '{$username}' ";
+	// $profile_query = mysqli_query($connection, $query);
+	// while($row = mysqli_fetch_assoc($profile_query)) {
+$stmt = mysqli_stmt_init($connection);
+	$query = "SELECT user_firstName, user_lastName, user_username, user_password, user_email FROM users WHERE user_username = ? ";
+	mysqli_stmt_prepare($stmt, $query);
+	mysqli_stmt_bind_param($stmt, 's', $username);
+	mysqli_stmt_execute($stmt);
+	mysqli_stmt_bind_result($stmt, $user_firstName, $user_lastName, $user_username, $user_password, $user_email);
+	mysqli_stmt_fetch($stmt);
+	 mysqli_stmt_close($stmt);
+	 //Do not close the connection. Close off the statement only. Unwanted connection block that conflicts with navigation.php
 	}
-}
+
 
 
 if(isset($_POST['update_profile'])) {
-	 $user_firstName = mysqli_real_escape_string($connection, $_POST['user_firstName']);
- $user_lastName = mysqli_real_escape_string($connection, $_POST['user_lastName']);
- $user_username = mysqli_real_escape_string($connection, $_POST['user_username']);
- $user_email = mysqli_real_escape_string($connection, $_POST['user_email']);
- $user_role = $_POST['user_role'];
+ $user_firstName = clean($_POST['user_firstName']);
+ $user_lastName = clean($_POST['user_lastName']);
+ $user_username = clean($_POST['user_username']);
+ $user_password = clean($_POST['user_password']);
+ $user_email = clean($_POST['user_email']);
+ 
     
 
-     $query = "UPDATE users SET ";
-     $query .="user_firstName = '{$user_firstName}', ";
-     $query .="user_lastName = '{$user_lastName}', ";
-     $query .="user_username = '{$user_username}', ";
-     $query .="user_password = '{$user_password}', ";
-     $query .="user_email = '{$user_email}', ";
-     $query .="user_role = '{$user_role}' ";
-     $query .="WHERE user_username = '{$username}' ";
+ $stmt = mysqli_stmt_init($connection);
+ $query = "UPDATE users SET user_firstName = ?, user_lastName = ?, user_username = ?, user_password = ?, user_email = ? WHERE user_username = ?";
+ mysqli_stmt_prepare($stmt, $query);
+ mysqli_stmt_bind_param($stmt, 'ssssss', $user_firstName, $user_lastName, $user_username, $user_password, $user_email, $username);
+ mysqli_stmt_execute($stmt);
+ mysqli_stmt_bind_result($stmt, $user_firstName, $user_lastName, $user_username, $user_password, $user_email);
+ mysqli_stmt_fetch($stmt);
 
-     $updateUser = mysqli_query($connection, $query);
-     queryConnect($updateUser);
-     $_SESSION['username'] = $user_username;
-	$_SESSION['firstname'] = $user_firstName;
-	$_SESSION['lastname'] = $user_lastName;
-	$_SESSION['email'] = $user_email;
-	header("Location: profileSubscriber.php");
-     echo "<p class='bg-success'>Profile Updated. <a href='profileSubscriber.php'>Back to Your Profile Dash</a></p>";
+ mysqli_stmt_close($stmt);
 
+$_SESSION['username'] = $user_username;
+$_SESSION['firstname'] = $user_firstName;
+$_SESSION['lastname'] = $user_lastName;
+$_SESSION['email'] = $user_email;
 
-  }
+header("Location: profileSubscriber.php");
+
+echo "<p class='bg-success'>Profile Updated. <a href='profileSubscriber.php'>Back to Your Profile Dash</a></p>";
+}
 ?>
  <div id="wrapper">
 

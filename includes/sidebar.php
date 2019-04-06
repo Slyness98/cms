@@ -3,7 +3,8 @@
  <div class="col-md-4">
 
     <?php 
-    if(!isset($_SESSION['username'])){
+    //if(!isset($_SESSION['username'])){
+    if(!$_SESSION['isLoggedIn']){
         echo "
             <div class='well'>
             <h4>Login</h4>
@@ -21,7 +22,7 @@
             <!-- /.input-group -->
         </form><!-- search from -->
         ";
-    }elseif (isset($_SESSION['username'])) {
+    }elseif($_SESSION['isLoggedIn']){// (isset($_SESSION['username'])) {
         $username = $_SESSION['username'];
         echo "
         <div class='well'

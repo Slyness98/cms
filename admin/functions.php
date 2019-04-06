@@ -1,4 +1,5 @@
 <?php 
+//GENERAL FUNCTIONS
 
   function queryConnect($result) {
     //this function takes the connection and query parameters passed through mysqli_query() and should either one of them cause an error when attempting
@@ -28,25 +29,56 @@ function selectQuery($column, $table){
 }
 
 
-  //--------------------------------FUNCTIONS FOR CATEGORIES ----------------------------------------------------------//
+
+
+
+
+//--------------------------------FUNCTIONS FOR CATEGORIES ---------------------------------------------------------------------------------------------------//
+//client-
+ function getCatTitle(){
+  global $connection;
+
+  if(isset($_GET['category'])){
+    $category = clean($_GET['category']);
+  $catQuery= "SELECT cat_title FROM categories WHERE cat_id = ?";  
+  $titleStmt = mysqli_stmt_init($connection);
+  mysqli_stmt_prepare($titleStmt, $catQuery);
+  mysqli_stmt_bind_param($titleStmt, 'i', $category);
+  mysqli_stmt_execute($titleStmt);
+  mysqli_stmt_bind_result($titleStmt, $cat_title);
+  mysqli_stmt_store_result($titleStmt);
+  mysqli_stmt_fetch($titleStmt);
+  mysqli_stmt_close($titleStmt);
+  }  
+}
+
+
+  //-----------Admin Category Functions------------------------------------------------------------------
   function addCategory(){
    global $connection;
        if(isset($_POST['submit'])) {
                                  
-          $cat_title = $_POST['cat_title'];
+          $cat_title = clean($_POST['cat_title']);
   	if($cat_title == "" || empty($cat_title)) {
       echo "This field should not be empty";
 
   	} else{
-      
-  	    $query = "INSERT INTO categories(cat_title)";
-  	    $query .= "VALUES('{$cat_title}')";
+     $stmt= mysqli_stmt_init($connection);
 
-  	    $create_category_query = mysqli_query($connection, $query);
+  	    $query = "INSERT INTO categories(cat_title) VALUES(?)";
+  	  mysqli_stmt_prepare($stmt, $query);
+       mysqli_stmt_bind_param($stmt,'s',$cat_title);
+       mysqli_stmt_execute($stmt);
 
-  	    if(!$create_category_query){
+
+
+
+  	   // $create_category_query = mysqli_query($connection, $query);
+
+  	    if(!$stmt){
   	        die('QUERY FAILED' . mysqli_error($connection));
   	    }
+        mysqli_stmt_close($stmt);
   	}
     }
   }
@@ -60,86 +92,156 @@ function selectQuery($column, $table){
        while ($row = mysqli_fetch_assoc($select_categories)) {
        $cat_id = $row['cat_id'];
        $cat_title = $row['cat_title'];
+       echo "<div class='form-group'>";
        echo "<tr>";
        echo "<td>{$cat_id}</td>";
        echo "<td>{$cat_title}</td>";
-       echo "<td><a href='categories.php?delete={$cat_id}'>Delete</a></td>";//Link to create a Query generated via GET to delete a category by ID
+       //Link activating deleteCategories()
+       echo "<td><a href='categories.php?delete={$cat_id}'>Delete</a></td>"; 
+       //Link activating showEditCategories() and, by extension, editCategories()
        echo "<td><a href='categories.php?edit={$cat_id}'>Edit</a></td>";
+
        echo "</tr>";
+       echo "</div>";
       }
    }
 
+    //The following functions are given some margins to emphasize their relationship to displayAllCategories(), 
+   //as well as the overall flow of the admin categories.php file, in which all of these functions are used. 
+            function deleteCategories(){
+            	global $connection;
+            if(isset($_GET['delete'])){
+             $get_cat_id = $_GET['delete'];
+             $stmt= mysqli_stmt_init($connection);
+             $query = "DELETE FROM categories WHERE cat_id = ?";
+             mysqli_stmt_prepare($stmt, $query);
+             //$query = "DELETE FROM categories WHERE cat_id = {$get_cat_id}";
+             // $delete_query = mysqli_query($connection, $query);
+             mysqli_stmt_bind_param($stmt, 'i', $get_cat_id);
+             mysqli_stmt_execute($stmt);
+             mysqli_stmt_close($stmt);
+             header("Location: categories.php");
+            }
+            }
 
-  function deleteCategories(){
-  	global $connection;
-  if(isset($_GET['delete'])){
-   $get_cat_id = $_GET['delete'];
-   $query = "DELETE FROM categories WHERE cat_id = {$get_cat_id}";
-   $delete_query = mysqli_query($connection, $query);
-   header("Location: categories.php");
-  }
-  }
+
+
+
+
+
+            function showEditCategories(){
+            global $connection;
+             if(isset($_GET['edit'])) {
+             ?>
+          <div class="row d-flex justify-content-start flex-direction: column">
+                 	<form action="" method="post">
+                 		<label for="cat-title">Edit Category</label>
+             <?php  
+               $cat_id = clean($_GET['edit']);
+               
+               $stmtSelect= mysqli_stmt_init($connection);
+             $query = "SELECT cat_id, cat_title FROM categories WHERE cat_id = ?";
+             mysqli_stmt_prepare($stmtSelect, $query);
+             mysqli_stmt_bind_param($stmtSelect, 'i', $cat_id);
+             mysqli_stmt_execute($stmtSelect);
+             mysqli_stmt_bind_result($stmtSelect, $cat_id, $cat_title);
+             mysqli_stmt_store_result($stmtSelect);
+               
+              while ($row = mysqli_stmt_fetch($stmtSelect)) {
+                
+
+                  echo "<input value='$cat_title' class='form-control' type='text' name='cat_title'>";
+
+
+              }
+            mysqli_stmt_close($stmtSelect);  
+            editCategories();
+            } 
+            }
+
+
+                      function editCategories(){
+
+                       global $connection; 
+                        //EDIT CATEGORY QUERY
+                        if(isset($_POST['update'])){
+                            $update = clean($_POST['cat_title']);
+                            $cat_id = $_GET['edit'];
+
+
+                      $stmt = mysqli_stmt_init($connection);
+                       // $query = "UPDATE categories SET cat_title = '{$update}' WHERE cat_id = {$cat_id} ";
+                       mysqli_stmt_prepare($stmt, "UPDATE categories SET cat_title = ? WHERE cat_id = ? ");
+                      mysqli_stmt_bind_param($stmt, 'si', $update, $cat_id);
+                      mysqli_stmt_execute($stmt);
+                      //mysqli_stmt_close($stmt);
+
+                        //$update_query = mysqli_query($connection, $query);
+                           if(!$stmt){
+                            die("Query Failed to Update". mysqli_error($connection));
+                           }
+                          header("Location:categories.php");
+                        }
+                      ?>
+                                                    
+
+                                <div class="form-group"> 
+                                  <input class="btn btn-primary" type="submit" name="update" value="Update Category">
+                                </div>
+                                <div class="form-group"> 
+                                 <input class="btn btn-warning"  type="submit" name="cancelUpdate" value="Cancel">
+                                 <?php if(isset($_POST['cancelUpdate'])) {header("Location:categories.php");}   //if we click the cancel btn we back out to categories.php without the $_GET['edit'] in the URL, rendering the editCategories function inactive on the parent page, admin/categories.php
+
+
+                                 ?>
+                               </div>
+                               
+                                </form>
+                              </div>
+
+                       <?php
+                        } //end editCategories() 
+                       ?> 
 
 
 
 
 
 
-  function editCategories(){
-  global $connection;
-   if(isset($_GET['edit'])) {
-   ?>
-       	<form  action="" method="post">
-       		<label for="cat-title">Edit Category</label>
-   <?php  
-     $cat_id = $_GET['edit'];
-     $query = "SELECT * FROM categories WHERE cat_id = $cat_id";
-     $select_categories = mysqli_query($connection, $query);
-       while ($row = mysqli_fetch_assoc($select_categories )) {
-       $cat_id = $row['cat_id'];
-       $cat_title = $row['cat_title'];
-   ?>
-          <input value="<?php if(isset($cat_title)){echo  $cat_title;} ?>" class="form-control" type="text" name="cat_title">
 
-  <?php }}?>
 
-  <?php 
-  //EDIT CATEGORY QUERY
-  if(isset($_POST['update'])){
-      $update = $_POST['cat_title'];
+<!-------------------------------- Functions for CMS's comment functionality and management------------------------------------------------------------------------- -->
 
-  $query = "UPDATE categories SET cat_title = '{$update}' WHERE cat_id = {$cat_id} ";
-  $update_query = mysqli_query($connection, $query);
-     if(!$update_query){
-      die("Query Failed to Update". mysqli_error($connection));
-     }
-    }
-  ?>
-                              
 
-          <div class="form-group"> 
-            <input class="btn btn-primary" type="submit" name="update" value="Update Category">
-          </div>
-          </form>
-  <?php
-  }
-  ?>
+
+
+
+
 
 <?php
-
-  function updateCommentStatus(){
-    global $connection;
-     $get_comment_status = $_GET['status'];
-    $get_comment_id=$_GET['c_id'];
+function updateCommentStatus(){
+  global $connection;
+  $get_comment_status = clean($_GET['status']);
+  $get_comment_id=clean($_GET['c_id']);
     
-            $query = "UPDATE comments SET comment_status = '$get_comment_status' WHERE comment_id = {$get_comment_id}";
-            $status_query = mysqli_query($connection,$query);
-            
-            if (!$status_query) {
+            // $query = "UPDATE comments SET comment_status = '$get_comment_status' WHERE comment_id = {$get_comment_id}";
+            // $status_query = mysqli_query($connection,$query);
+  $query = "UPDATE comments SET comment_status = ? WHERE comment_id = ?";
+  $stmt = mysqli_stmt_init($connection);  
+   
+   mysqli_stmt_prepare($stmt, $query);
+   mysqli_stmt_bind_param($stmt, 'si', $get_comment_status, $get_comment_id);
+   mysqli_stmt_execute($stmt); 
+
+
+ if (!$stmt) {
   die("Query failed. " . mysqli_error($connection));
-}
+ }
+
+  mysqli_stmt_close($stmt);
 
              header("Location: comments.php");
+//No need to update post_comment_count when a new comment is created. PHPMyAdmin auto increments this column for us. 
 }
 
 
@@ -154,52 +256,85 @@ function deleteComment(){
   $comment_id = $row['comment_id'];
   
   
- $get_post_id = $_GET['delete']; //this looks weird but this is actually what we need in lieu of "WHERE comment_id = {$comment_id}". The delete parameter carries the exact id we need. If you use $comment_id, it deletes the previous comment id for some reason.
- $query = "DELETE FROM comments WHERE comment_id = {$get_post_id}";
- $delete_query = mysqli_query($connection, $query);
- if (!$delete_query) {
+ $get_comment_id = clean($_GET['delete']);
+  //this looks weird but this is actually what we need in lieu of "WHERE comment_id = {$comment_id}". The delete parameter carries the exact id we need. If you use $comment_id, it deletes the previous comment id for some reason.
+ 
+ $query = "DELETE FROM comments WHERE comment_id = ?";
+ $stmt =mysqli_stmt_init($connection);
+ mysqli_stmt_prepare($stmt, $query);
+ mysqli_stmt_bind_param($stmt, 'i', $get_comment_id);
+ mysqli_stmt_execute($stmt);
+ if (!$stmt) {
   die("Query failed. " . mysqli_error($connection));
  
 }
+mysqli_stmt_close($stmt);
 header("Location: comments.php");
+
+
+$countQuery ="UPDATE posts SET post_comment_count = post_comment_count - 1 WHERE post_id = ?";
+$get_post_id = clean($_GET['postAffected']);
+     $stmt = mysqli_stmt_init($connection);
+     mysqli_stmt_prepare($stmt, $countQuery);
+     mysqli_stmt_bind_param($stmt, 'i', $get_post_id);
+     mysqli_stmt_execute($stmt);
+     mysqli_stmt_close($stmt);
+
 } 
-//------------------------------------------------Functions Relating to Users -------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+//------------------------------------------------Functions Relating to Users ----------------------------------------------------------------------------------------------
+
+
+
+
+
 
 function addUser(){
   global $connection;
-  $user_firstName=mysqli_real_escape_string($connection, $_POST['user_firstName']);
-     $user_lastName=mysqli_real_escape_string($connection, $_POST['user_lastName']);
-     $user_role = $_POST['user_role'];
+  $user_firstName=clean($_POST['user_firstName']);
+     $user_lastName=clean($_POST['user_lastName']);
+     $user_role =clean($_POST['user_role']);
      // $post_image = $_FILES['image']['name'];
      // $post_image_temp = $_FILES['image']['tmp_name'];
-     $user_username=mysqli_real_escape_string($connection, $_POST['user_username']);
-     $user_password=mysqli_real_escape_string($connection, $_POST['user_password']);
-     $user_email=mysqli_real_escape_string($connection, $_POST['user_email']);
+     $user_username=clean($_POST['user_username']);
+     $user_password=clean($_POST['user_password']);
+     $user_email=clean($_POST['user_email']);
      
-     
-     // move_uploaded_file($post_image_temp, "../images/$post_image");
 
-     $query = "INSERT INTO users(user_id, user_firstName, user_lastName, user_role, user_username, user_password, user_email)";
+    
 
-     $query .= "VALUES('{$user_id}', '{$user_firstName}', '{$user_lastName}', '{$user_role}', '{$user_username}', '{$user_password}', '{$user_email}')";
-     $createUserQuery = mysqli_query($connection, $query);
-
-     queryConnect($createUserQuery); //from functions.php - runs a die() function with mysqli_query() function stored as a parameter containing our connection and query
+     $user_password = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => 12)); //re-assign $user_password as the hashed form of the password we take from $POST['user_password']
+     $query = "INSERT INTO users(user_id, user_firstName, user_lastName, user_role, user_username, user_password, user_email) VALUES(?,?,?,?,?,?,?)";
+     $stmt = mysqli_stmt_init($connection);
+     mysqli_stmt_prepare($stmt, $query);
+     mysqli_stmt_bind_param($stmt, 'issssss', $user_id, $user_firstName, $user_lastName, $user_role, $user_username, $user_password, $user_email);
+     mysqli_stmt_execute($stmt);
+     mysqli_stmt_close($stmt);
      header("Location: users.php");
 }
 
 
 function updateUser(){
     global $connection;
-    $get_user_id = $_GET['u_id'];
-     $user_id = $_POST['user_id'];
-     $user_firstName = mysqli_real_escape_string($connection, $_POST['user_firstName']);
-     $user_lastName = mysqli_real_escape_string($connection, $_POST['user_lastName']);
-     $user_username = mysqli_real_escape_string($connection, $_POST['user_username']);
-     $user_password = mysqli_real_escape_string($connection, $_POST['user_password']);
+    $get_user_id = clean($_GET['u_id']);
+     $user_id = clean($_POST['user_id']);
+     $user_firstName = clean($_POST['user_firstName']);
+     $user_lastName = clean($_POST['user_lastName']);
+     $user_username = clean($_POST['user_username']);
+     $user_password =  clean($_POST['user_password']);
      //$user_profilePicture = $_POST['user_profilePicture'];
-     $user_email = mysqli_real_escape_string($connection, $_POST['user_email']);
-     $user_role = $_POST['user_role'];
+     $user_email = clean($_POST['user_email']);
+     $user_role = clean($_POST['user_role']);
 
 
      // move_uploaded_file($post_image_temp, "../images/$post_image");
@@ -213,42 +348,54 @@ function updateUser(){
      //   }
   
      // }
-     $query = "UPDATE users SET ";
-     $query .="user_id = '{$user_id}', ";
-     $query .="user_firstName = '{$user_firstName}', ";
-     $query .="user_lastName = '{$user_lastName}', ";
-     $query .="user_username = '{$user_username}', ";
-     $query .="user_password = '{$user_password}', ";
-     $query .="user_email = '{$user_email}', ";
-     $query .="user_role = '{$user_role}' ";
-     $query .="WHERE user_id = {$get_user_id}";
+     
 
-     $updateUser = mysqli_query($connection, $query);
-     queryConnect($updateUser);
+       $user_password = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => 12));
+   ;
+    $query = "UPDATE users SET user_id = ?, user_firstName = ?, user_lastName = ?, user_username = ?, user_password = ?, user_email = ?, user_role = ? WHERE user_id = ?";
+
+    $stmt = mysqli_stmt_init($connection);
+    mysqli_stmt_prepare($stmt, $query);
+    mysqli_stmt_bind_param($stmt, 'issssssi', $user_id, $user_firstName, $user_lastName, $user_username, $user_password, $user_email, $user_role, $get_user_id);
+    mysqli_stmt_execute($stmt);
+
      echo "<p class='bg-success'>User Updated. <a href='../admin/users.php'>Back to users table</a></p>";
+     mysqli_stmt_close($stmt);
+     
 }
 
 
 function deleteUser(){
     global $connection;
-
-  $query = "SELECT * FROM users";
-  $select_users = mysqli_query($connection, $query);
-  $row = mysqli_fetch_assoc($select_users); 
-  $user_id = $row['user_id'];
   
-  
- $get_user_id = $_GET['delete']; //this looks weird but this is actually what we need in lieu of "WHERE user_id = {$user_id}". The delete parameter already carries the exact user id we need. If you use regular $user_id, it deletes the previous user insteadnfor some reason.
- $query = "DELETE FROM users WHERE user_id = {$get_user_id}";
- $delete_query = mysqli_query($connection, $query);
- if (!$delete_query) {
-  die("Query failed. " . mysqli_error($connection));
+$get_user_id = clean($_GET['delete']); //this looks weird but this is actually what we need in lieu of "WHERE user_id = {$user_id}". The delete parameter already carries the exact user id we need. If you use regular $user_id, it deletes the previous user instead, for some reason.
  
-}
+
+$deleteQuery = "DELETE FROM users WHERE user_id = ?";
+ $stmt = mysqli_stmt_init($connection);
+ mysqli_stmt_prepare($stmt, $deleteQuery);
+ mysqli_stmt_bind_param($stmt,'i',$get_user_id);
+ mysqli_stmt_execute($stmt);
+ if (!$stmt) {
+  die("Query failed. " . mysqli_error($connection));
+ }
+ mysqli_stmt_close($stmt);
 header("Location: users.php");
 }
 
+
+
+
+
+
+
+
 // -------------------------------------------Stat Funtions--------------------------------------------------------------------------
+
+
+
+
+
 
 
 function contentCount($table){
@@ -266,7 +413,7 @@ function customContentCount($table, $column, $value){
   $query = "SELECT * FROM {$table} WHERE {$column} = {$value}";
 
   $sendQuery = mysqli_query($connection, $query);
-   queryConnect($sendQuery);
+  queryConnect($sendQuery);
   $count = mysqli_num_rows($sendQuery);
   return $count;
 }
@@ -274,12 +421,47 @@ function customContentCount($table, $column, $value){
 
 
 
+
+
+
+
+
+
 // --------------------------------------Security Functions---------------------------------------------------------------
+
+
+
+
+
+
+
 function clean($param){
-    global $connection;
+global $connection;
 $cleaned = mysqli_real_escape_string($connection, trim(strip_tags($param))); //escape in context to our connection and trim excess tags maliciously added on, leaving only the data that was meant to be processed. 
 return $cleaned;
 
+}
+
+function is_admin($username){
+global $connection;
+if(isset($_SESSION['username'])){
+
+  $query = "SELECT user_role FROM users WHERE user_username = ?";
+  $stmt = mysqli_stmt_init($connection);
+  mysqli_stmt_prepare($stmt, $query);
+  mysqli_stmt_bind_param($stmt, 's', $username);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_bind_result($stmt, $user_role);
+  mysqli_stmt_store_result($stmt);
+  mysqli_stmt_fetch($stmt);
+    if( $user_role == 'admin'){
+      return true;
+    }else{
+      return false;
+    }
+}else{
+  exit;
+}
 }
 
 ?>

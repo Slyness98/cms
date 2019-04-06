@@ -2,33 +2,34 @@
 
 if(isset($_POST['create_post'])) {
  
-    
-     $post_title = $_POST['title'];
-     $post_author = $_POST['author'];
-     $post_category_id = $_POST['post_category'];
-     $post_status = $_POST['post_status'];
-     $post_image = $_FILES['image']['name'];
-     $post_image_temp = $_FILES['image']['tmp_name'];
-     $post_tags = $_POST['post_tags'];
-     $post_content=mysqli_real_escape_string($connection, $_POST['post_content']);
-     $post_date = date('d-m-y');
+ $post_title =clean($_POST['title']);
+ $post_author = clean($_POST['author']);
+ $post_category_id = clean($_POST['post_category']);
+ $post_status = clean($_POST['post_status']);
+ $post_image = $_FILES['image']['name'];
+ $post_image_temp = $_FILES['image']['tmp_name'];
+ $post_tags = clean($_POST['post_tags']);
+ $post_content=clean($_POST['post_content']);
+ $post_date = date('y-m-d');
      
+  
      
-     move_uploaded_file($post_image_temp, "../images/$post_image");
-
-     $query = "INSERT INTO posts(post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags, post_status)";
-
-     $query .= "VALUES('{$post_category_id}', '{$post_title}', '{$post_author}', now(), '{$post_image}', '{$post_content}', '{$post_tags}', '{$post_status}')";
-     $sendPostQuery = mysqli_query($connection, $query);
-
-     queryConnect($sendPostQuery); //from functions.php - runs a die() function with mysqli_query() function stored as a parameter containing our connection and query
-     //header("Location: posts.php");
-
-     $get_post_id = mysqli_insert_id($connection); //this mysqli function grabs the latest ID created and makes the ID of the post just published available to us. We don't have to worry about other types of IDs being grabbed because this fires instantaneously after creating a new post. Nothing in our DB can be more up-to-date. Therefore, only the latest post id can be selected, which is what we want. 
+     $stmt = mysqli_stmt_init($connection);
+     $query = "INSERT INTO posts(post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags, post_status) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+     mysqli_stmt_prepare($stmt, $query);
+     mysqli_stmt_bind_param($stmt, 'isssssss', $post_category_id, $post_title, $post_author, $post_date, $post_image, $post_content, $post_tags, $post_status);
+     $run = mysqli_stmt_execute($stmt);
+     if(!$run){
+     	echo "Error creating post";
+     }else{
+     	 $get_post_id = mysqli_insert_id($connection); 
      echo "<p class='bg-success'>New post created successfully! <a href='../post.php?p_id={$get_post_id}'>View your latest creation, </a><a href='posts.php'>View all publications, or <a href='posts.php?source=add_post'>Add More Posts!</a></p>";
-
-	}
+ 	  }
+}
 ?>
+
+
+
 
 
 <form action="" method="post" enctype="multipart/form-data">

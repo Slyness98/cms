@@ -12,7 +12,7 @@ $password = clean($_POST['password']);
 
 
 $password = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
-//skip edwin's first section on pw encryption and cut straight to the updated one. Make a prepared statment for his code querying the database after the password_hash code written directly above
+
 $query="INSERT INTO users (user_username, user_firstName, user_lastName, user_email, user_password, user_role) VALUES (?, ?, ?, ?, ?, ?)";
 $subscriber = "subscriber";
  $stmt = mysqli_prepare($connection, $query);
@@ -20,6 +20,17 @@ $subscriber = "subscriber";
     $run = mysqli_stmt_execute($stmt);
     queryConnect($run);
     mysqli_stmt_close($stmt);
+     if($run){
+    $_SESSION['username'] = $username;
+    $_SESSION['password'] = $password;
+    $_SESSION['firstname'] = $firstName;
+    $_SESSION['lastname'] = $lastName;
+    $_SESSION['email']= $email;
+    $_SESSION['role'] = $subscriber; //We're assigning a SESSION variable to a new record. We must explicitely give their role to the SESSION for this first time login
+        echo "<p class='bg-success text-center'>Welcome to the community, {$username}!. <a href='profileSubscriber.php'> View your profile </a>, or get back to the content and <a href='index.php'> view our latest posts </a></p>";
+    }else{
+         echo "<p class='bg-danger'>Uh, oh! Sorry, but your registration did not process. Make sure all fields are filled out and that the email field follows the correct format, 'someemailaddress@example.com'.</p>";
+    }
 }
 
 

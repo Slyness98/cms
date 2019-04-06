@@ -1,27 +1,22 @@
 <?php
 if(isset($_GET['u_id'])) {
-$get_user_id = $_GET['u_id'];
+$get_user_id = clean($_GET['u_id']);
 }
- $query = "SELECT * FROM users WHERE user_id = $get_user_id";
-   $select_users_by_id = mysqli_query($connection, $query);
-     while ($row = mysqli_fetch_assoc($select_users_by_id)) {
+ // $query = "SELECT user_id, user_firstName, user_lastName, user_username, user_password, user_email, user_role FROM users WHERE user_id = $get_user_id";
+ //   $select_users_by_id = mysqli_query($connection, $query);
+ //     while ($row = mysqli_fetch_assoc($select_users_by_id)) {
+ $query = "SELECT user_id, user_firstName, user_lastName, user_username, user_password, user_email, user_role FROM users WHERE user_id = ?";
+ $stmt = mysqli_stmt_init($connection);
+ mysqli_stmt_prepare($stmt, $query);
+ mysqli_stmt_bind_param($stmt, 'i', $get_user_id);
+ mysqli_stmt_execute($stmt);
+ mysqli_stmt_bind_result($stmt, $user_id, $user_firstName, $user_lastName, $user_username, $user_password, $user_email, $user_role);
+ mysqli_stmt_fetch($stmt);
+ mysqli_stmt_close($stmt);
 
-     $user_id = $row['user_id'];
-     $user_firstName = $row['user_firstName'];
-     $user_lastName = $row['user_lastName'];
-     $user_username = $row['user_username'];
-     $user_password = $row['user_password'];
-     //$user_profilePicture = $_POST['user_profilePicture'];
-     $user_email = $row['user_email'];
-     $user_role = $row['user_role'];
- }
-?>
-
-<?php
 
 if(isset($_POST['update_user'])) {
 updateUser();
-
 }
 ?>
 

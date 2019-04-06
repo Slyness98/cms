@@ -29,10 +29,7 @@
                         </div>
                        </form>
 
-<?php 
-editCategories();
-    //If edit button link in table is clicked, run this function that handles logic for updating that category
-    ?>
+
                    </div>
 
                  <!-- category table --> 
@@ -49,8 +46,10 @@ editCategories();
                      <tbody>
 
 
-<?php displayAllCategories(); //put all categories in a  table with edit and delete links that triggers the other types of queries  ?>
-<?php deleteCategories(); //DELETE CATEGORY QUERY ?>
+<?php 
+displayAllCategories(); //put all categories in a  table with edit and delete links that triggers the other types of queries  
+showEditCategories(); //if edit button from displayAllCategories is clicked, then this function actually runs.
+deleteCategories(); //once delete buttonfrom displayAllCategories is clicked, then this function actually runs ?>
    
 
                        

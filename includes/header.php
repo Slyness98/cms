@@ -1,6 +1,21 @@
 <?php include "db.php";   ?>
 <?php include "admin/functions.php"; ?>
-<?php session_start(); ?>
+
+<?php 
+  session_start();
+  //header("X-XSS-Protection: 1; mode=block");
+?>
+<?php 
+if(!isset($_SESSION['isLoggedIn'])){
+    $_SESSION['isLoggedIn']=false;
+}//if we don't already have it, set it now. 
+if($_SESSION['isLoggedIn']===false){
+    $_SESSION['role'] = "guest";
+    $_SESSION['username'] = "Guest";
+    //it's best to set this logic in the header so that we have it on entry to the site, no matter who the user is or if they've visited before
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,13 +28,9 @@
     <meta name="author" content="">
 
     <title>The Contriving Coder</title>
-
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    
     <!-- Custom CSS -->
     <link href="css/blog-home.css" rel="stylesheet">
 

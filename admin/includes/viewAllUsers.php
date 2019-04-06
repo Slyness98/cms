@@ -17,6 +17,7 @@
                     <tbody>
 <?php
  $query = "SELECT * FROM users";
+ //no need for a prepared statement here. There is no WHERE clause or any other variable to parameterize. This query is ran on page load and called internally.
    $select_users = mysqli_query($connection, $query);
 
 

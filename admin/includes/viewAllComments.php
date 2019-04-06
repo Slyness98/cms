@@ -11,7 +11,6 @@
                             <th>Date</th>
                             <th>Approved</th>
                             <th>Blocked</th>
-                            <th>Edit</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
@@ -39,17 +38,22 @@
         echo "<td>{$comment_content}</td>";
         echo "<td>{$comment_email}</td>";
         echo "<td>{$comment_status}</td>";
-       
-        $postRespondedTo = "SELECT post_title FROM posts WHERE post_id = $comment_post_id";
-        $select_post_id = mysqli_query($connection, $postRespondedTo);
-        $row = mysqli_fetch_assoc($select_post_id);
-        $related_post= $row['post_title'];
-        echo "<td><a href='../post.php?p_id={$comment_post_id}'>{$related_post}</a></td>";
+
+//It kills me to put this prepared statement for the link to the related post's title in the while loop but I can't get it to run properly if I make it a seperate function. It's incredibly inefficient on memory and I should come back to try to implement a solution that doesn't loop as many times as there are comments. 
+
+$stmt = mysqli_stmt_init($connection);
+$postRespondedTo = "SELECT post_title FROM posts WHERE post_id = ?";
+mysqli_stmt_prepare($stmt, $postRespondedTo);
+mysqli_stmt_bind_param($stmt, 'i', $comment_post_id);
+mysqli_stmt_execute($stmt);
+mysqli_stmt_bind_result($stmt, $post_title);
+mysqli_stmt_store_result($stmt);
+mysqli_stmt_fetch($stmt); 
+         echo "<td><a href='../post.php?p_id={$comment_post_id}'>{$post_title}</a></td>";
         echo "<td>{$comment_date}</td>";
-       echo "<td><a href='comments.php?status=approved&c_id={$comment_id}' class='btn btn-primary'>Approved</a></td>";
-echo "<td><a href='comments.php?status=blocked&c_id={$comment_id}' class='btn btn-warning'>Blocked</a></td>";
-        echo "<td><a href='comments.php?edit={$comment_id}'>Edit</a></td>";
-        echo "<td><a href='comments.php?delete={$comment_id}'>Delete</a></td>";
+       echo "<td><a href='comments.php?status=approved&c_id={$comment_id}' class='btn btn-success'>Approved</a></td>";
+echo "<td><a href='comments.php?status=blocked&c_id={$comment_id}' class='btn btn-danger'>Blocked</a></td>";
+        echo "<td><a href='comments.php?delete={$comment_id}&postAffected={$comment_post_id}'>Delete</a></td>";
      echo "</tr>";
 }
 ?>
@@ -64,7 +68,7 @@ if(isset($_GET['status'])){
 ?>
 
 <?php
-if(isset($_GET['delete'])) {
+if(isset($_GET['delete'])&&isset($_GET['postAffected'])) {
     deleteComment();
 }
 ?>

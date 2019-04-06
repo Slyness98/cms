@@ -7,12 +7,15 @@
 
 
 <?php
-if(isset($_SESSION['role'])) {
-if($_SESSION['role'] == 'subscriber') {
+// if(isset($_SESSION['role'])) {
+// if($_SESSION['role'] == 'subscriber') {
 
+//     header("Location: ../index.php");
+// }
+
+// }
+if(!is_admin($_SESSION['username'])){
     header("Location: ../index.php");
-}
-
 }
 
 ?>
@@ -45,9 +48,7 @@ if($_SESSION['role'] == 'subscriber') {
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-<script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
  
 </head>
 

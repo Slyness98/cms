@@ -11,23 +11,31 @@
             <div class="col-md-8">
         <?php 
         if(isset($_GET['p_id'])){
-        $post_id = $_GET['p_id'];  
+        $post_id = clean($_GET['p_id']);  
         }
         
 
         
                 
-                $query = "SELECT * FROM posts WHERE post_id = $post_id";
+                // $query = "SELECT * FROM posts WHERE post_id = $post_id";
 
-                $query_all_posts = mysqli_query($connection, $query);
+                // $query_all_posts = mysqli_query($connection, $query);
 
-                while ($row = mysqli_fetch_assoc($query_all_posts)) {
-                 $post_title = $row['post_title'];
-                 $post_author = $row['post_author'];
-                 $post_date = $row['post_date'];
-                 $post_image = $row['post_image'];
-                 $post_content = $row['post_content'];
+                // while ($row = mysqli_fetch_assoc($query_all_posts)) {
+                //  $post_title = $row['post_title'];
+                //  $post_author = $row['post_author'];
+                //  $post_date = $row['post_date'];
+                //  $post_image = $row['post_image'];
+                //  $post_content = $row['post_content'];
+            $query = "SELECT post_id, post_author, post_title, post_category_id, post_status, post_image, post_tags, post_content, post_comment_count, post_date FROM posts WHERE post_id = ?";
+            $stmt = mysqli_stmt_init($connection);
+            mysqli_stmt_prepare($stmt, $query);
+            mysqli_stmt_bind_param($stmt, 'i', $post_id);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_bind_result($stmt, $post_id, $post_author, $post_title, $post_category_id, $post_status, $post_image, $post_tags, $post_content, $post_comment_count, $post_date);
+            mysqli_stmt_store_result($stmt);
 
+              while(mysqli_stmt_fetch($stmt)){
             ?>
               <h1 class="page-header">
                 Latest Posts
@@ -62,22 +70,38 @@
 
 <?php 
 if(isset($_POST['create_comment'])){
-  $comment_author = $_POST['comment_author'];
-    $comment_email = $_POST['comment_email'];
-    $comment_content = $_POST['comment_content'];
+  $comment_author = clean($_POST['comment_author']);
+    $comment_email = clean($_POST['comment_email']);
+    $comment_content = clean($_POST['comment_content']);
 
   if(!empty($comment_author)&&!empty($comment_email)&&!empty($comment_content)){
-    $query = "INSERT INTO comments(comment_post_id, comment_author, comment_email, comment_content, comment_status, comment_date)" ;
+    // $query = "INSERT INTO comments(comment_post_id, comment_author, comment_email, comment_content, comment_status, comment_date)" ;
 
-    $query .= "VALUES('{$post_id}', '{$comment_author}', '{$comment_email}', '{$comment_content}', 'blocked', now())";
+    // $query .= "VALUES('{$post_id}', '{$comment_author}', '{$comment_email}', '{$comment_content}', 'blocked', now())";
 
-    $createCommentQuery = mysqli_query($connection, $query);
-    queryConnect($createCommentQuery);
-    
+    // $createCommentQuery = mysqli_query($connection, $query);
+    // queryConnect($createCommentQuery);
+    $blocked = 'blocked';
+    date_default_timezone_set('America/Los_Angeles');
+     $now = date('Y-m-d');
+     $query = "INSERT INTO comments(comment_post_id, comment_author, comment_email, comment_content, comment_status, comment_date) VALUES(?,?,?,?,?,?)" ;
+     $stmt = mysqli_stmt_init($connection);
+     mysqli_stmt_prepare($stmt, $query);
+     mysqli_stmt_bind_param($stmt, 'isssss', $post_id, $comment_author, $comment_email, $comment_content, $blocked, $now);
+     mysqli_stmt_execute($stmt);
+     mysqli_stmt_close($stmt);
+      
 
-      $countQuery ="UPDATE posts SET post_comment_count = post_comment_count + 1 WHERE post_id = $post_id";
 
-     $updateCommentCount = mysqli_query($connection,$countQuery);
+    //$countQuery ="UPDATE posts SET post_comment_count = post_comment_count + 1 WHERE post_id = $post_id";
+
+     // $updateCommentCount = mysqli_query($connection,$countQuery);
+     $countQuery ="UPDATE posts SET post_comment_count = post_comment_count + 1 WHERE post_id = ?";
+     $stmt = mysqli_stmt_init($connection);
+     mysqli_stmt_prepare($stmt, $countQuery);
+     mysqli_stmt_bind_param($stmt, 'i', $post_id);
+     mysqli_stmt_execute($stmt);
+     mysqli_stmt_close($stmt);
 
   }else{
     echo "<script>alert('All fields required. Please fill out all fields.')</script>";
@@ -115,17 +139,25 @@ if(isset($_POST['create_comment'])){
 
          <!-- Start of existing comment forum -->
          <?php
-         $query = "SELECT * FROM comments WHERE comment_post_id = {$post_id} ";
-         $query .= "AND comment_status = 'approved' ";
-         $query .= "ORDER BY comment_id DESC ";
-         $select_comment_query = mysqli_query($connection , $query);
-         if(!$select_comment_query){
+         // $query = "SELECT * FROM comments WHERE comment_post_id = {$post_id} ";
+         // $query .= "AND comment_status = 'approved' ";
+         // $query .= "ORDER BY comment_id DESC ";
+         // $select_comment_query = mysqli_query($connection , $query);
+         $approved = 'approved';
+         $query = "SELECT comment_author, comment_content, comment_date FROM comments WHERE comment_post_id = ? AND comment_status = ? ORDER BY comment_id DESC";
+         $stmt = mysqli_stmt_init($connection);
+          mysqli_stmt_prepare($stmt, $query);
+          mysqli_stmt_bind_param($stmt, 'is', $post_id, $approved);
+          mysqli_stmt_execute($stmt);
+           if(!$stmt){
             die('QUERY FAILED' . mysqli_error($connection));
          }
-         while ($row = mysqli_fetch_assoc($select_comment_query)) {
-             $comment_date = $row['comment_date'];
-             $comment_content = $row['comment_content'];
-             $comment_author = $row['comment_author'];
+          mysqli_stmt_bind_result($stmt, $comment_author, $comment_content, $comment_date);
+          mysqli_stmt_store_result($stmt);
+          
+        
+         while (mysqli_stmt_fetch($stmt)) {
+            
         ?>
         
 
@@ -142,7 +174,10 @@ if(isset($_POST['create_comment'])){
                         </div>
 
 
-        <?php }  ?>
+        <?php 
+          }
+          mysqli_stmt_close($stmt);  
+        ?>
 
                 <!-- Comment -->
                

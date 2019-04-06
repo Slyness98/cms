@@ -17,23 +17,11 @@
                         </h1>
                     
   <?php 
-    if(isset($_GET['source'])) {
-        $source = $_GET['source'];
-    }else {
-        $source = '';
-    }
-    switch($source) {
-case 'add_post';
-include "includes/addPost.php";
-break;
-case 'edit_post';
-include "includes/edit.php";
-break; 
-default:
+ 
 include "includes/viewAllComments.php";
 
-break;
-    }
+
+    
   ?>                  
 
 

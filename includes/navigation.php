@@ -18,22 +18,39 @@
             <ul class="nav navbar-nav">
          
              
-<?php 
-$query = "SELECT * FROM categories";
-$select_all = mysqli_query($connection,$query);
-
-while ($row = mysqli_fetch_assoc($select_all)) {
- $cat_title = $row['cat_title'];
- $cat_id = $row['cat_id'];
-          
-          echo "<li> <a href='../cms/postsByCategory.php?category={$cat_id}'> {$cat_title} </a> </li>";
-    }
-    ?>
 
 
-                <li>
+
+                <!-- <li>
                    <a href="../cms/categories.php">Categories</a>
+                </li> -->
+                <li class="dropdown">
+                 <a href="../cms/categories.php" 
+                    class="dropdown-toggle" 
+                    data-toggle="dropdown" 
+                    role="button" 
+                    aria-expanded="false">Categories <span class="caret"></span>
+                 </a>
+                    <ul class="dropdown-menu">
+                  
+                   <?php 
+                    $query = "SELECT * FROM categories";
+                    $select_all = mysqli_query($connection,$query);
+
+                    while ($row = mysqli_fetch_assoc($select_all)) {
+                     $cat_title = $row['cat_title'];
+                     $cat_id = $row['cat_id'];
+                              
+                              echo "<li> <a href='../cms/postsByCategory.php?category={$cat_id}'> {$cat_title} </a> </li>";
+                        }
+                        ?>
+                    </ul>
+                 </li>
+         
+                 <li>
+                   <a href="../cms/registration.php">Registration</a>
                 </li>
+
                
 <?php if(isset($_SESSION['role'])) {
 if($_SESSION['role'] == 'admin'){

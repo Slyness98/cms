@@ -24,10 +24,6 @@ if(isset($_POST['create_user'])) {
 
 	   </select>
 
-	<!-- <div class="form-group">
-		<label for="post_category">Post Category  ID </label>
-		<input type="text" class="form-control" name="post_category_id">
-	</div> -->
 
 	
 
