@@ -1,0 +1,19 @@
+.indexPagination{
+	background-color: gray;
+}
+
+.index-container{
+	background-color: #666564;
+}
+
+.pager li .active_link {
+	background-color: #000;
+}
+
+.blog-meta-data {
+	color:white;
+}
+.dropdown-menu{
+  color:white;
+  background-color:rgba(0,160,176,.9);
+}

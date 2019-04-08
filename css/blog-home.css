@@ -12,6 +12,6 @@ footer {
     margin: 50px 0;
 }
 
-.dropdown>.dropdown-menu>li>a:hover{
+.dropdown-menu{
   background-color: #aa0000;
 }

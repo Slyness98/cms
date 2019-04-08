@@ -11,6 +11,6 @@
 ?>
 
   <h2>
-                <a href="../cms/postsByCategory/<?php echo $cat_id;?>"><?php echo $cat_title; ?></a>
+                <a href="../cms/postsByCategory?category=<?php echo $cat_id;?>"><?php echo $cat_title; ?></a>
             </h2>
 <?php } ?>

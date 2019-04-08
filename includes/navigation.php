@@ -1,5 +1,5 @@
  <nav class="navbar navbar-expand-md navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
+    <div class="container-fluid">
            
             <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -31,7 +31,7 @@
                     role="button" 
                     aria-expanded="false">Categories <span class="caret"></span>
                  </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" >
                   
                    <?php 
                     $query = "SELECT * FROM categories";
