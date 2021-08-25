@@ -1,0 +1,68 @@
+Options -Indexes
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# <IfModule mod_rewrite.c>
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^about about.php [NC,L] 
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^articles/([1-9][0-9][0-9]|[1-9][0-9]|[0-9]) post.php?p_id=$1 [NC,L] 
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^category categories.php [NC,L] 
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^categories/([1-9][0-9][0-9]|[1-9][0-9]|[0-9]) postsByCategory.php?category=$1 [NC,L] 
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^home index.php [NC,L] 
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^register registration.php [NC,L] 
+
+
+# </IfModule>
+
+
+
+
+
+# RewriteCond %{REQUEST_URI} ^\/side_projects\/cmsTest\/post\.php$ 
+# RewriteCond %{QUERY_STRING} ^p_id=([0-9]*) 
+# RewriteRule ^(.*)$ post.php/%1 [R=301,L] 
+
+
+# RewriteCond %{SCRIPT_FILENAME} !-d   # if it's not a directory
+# RewriteCond %{SCRIPT_FILENAME} !-f   # if it's not a filename
+# RewriteRule ^articles/([1-9][0-9][0-9]|[1-9][0-9]|[0-9])/?$ https://dev.contrivingcoder.com/side_projects/cmsTest/post.php?p_id=$1 [NC]
+
+
+
+ 
+
+
+# RewriteRule ^articles/([0-9]*)$ https://dev.contrivingcoder.com/side_projects/cmsTest/post.php?p_id=%1 [L]
+
+# RewriteCond %{QUERY_STRING} p_id=(.*)
+# RewriteRule  /articles/$1 [R=302,L]
+
+# RedirectMatch 301 ^articles/([^/]*)$ /side_projects/cmsTest/post.php?p_id=$1 [L]
+
+# RewriteCond %{QUERY_STRING} p_id=(.*)
+# RewriteRule articles/%1 post.php [L]
+
+# RewriteRule ^([a-zA-Z0-9_-]+)$ https://%{HTTP_HOST}/post.php?p_id=[1-9][0-9][0-9]|[1-9][0-9]|[0-9]
+
+# RewriteRule ^articles/?$ post.php?p_id=[1-9][0-9][0-9]|[1-9][0-9]|[0-9] [NC,L]
+#RewriteCond https://%{HTTP_HOST}\/post\.php\?p_id=([1-9][0-9][0-9]|[1-9][0-9]|[0-9])
+#RewriteRule ^ https://%{HTTP_HOST}/articles/%1 [R,L]
+ #RewriteRule ^post\.php\?p_id=([1-9][0-9][0-9]|[1-9][0-9]|[0-9])$ articles/$1 [L,NC]
+ 

@@ -1,0 +1,91 @@
+/* .btn defined in bootstrap. That is the base component of this file and the following 
+ code only contains custom modifiers. */
+.btn {
+	&-sm {
+		border-width: medium;
+		border-radius: 0;
+		padding: .5rem 1.1rem;
+		font-size: .9rem;
+		text-transform: uppercase;
+		margin: 1rem;
+
+		@include respond(tab-land) {
+			margin: 0;
+		}
+	}
+
+
+
+	&-turquoise {
+		border-color: #1ebba3;
+		background-color: #1ebba3;
+		color: white;
+		clip-path: polygon(10% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 10% 80%);
+
+		&:hover,:focus {
+			border-color: #189582;
+			background-color: #189582;
+			color: white;
+		}
+
+		&--articles {
+			position: absolute;
+			bottom: -2%;
+			left: 65%;
+
+			@include respond(tab-land) {
+				bottom: 0%;
+				left: 65%
+			}
+
+		}
+
+		&--home {
+			position: absolute;
+			bottom: -5%;
+		    left: 84%;
+		}
+
+		&--register {
+			clip-path: none;
+			transform: translate(11rem, .5rem);
+
+			@include respond(sm-desktop) {
+				// transform: translate(-7rem, -2.5rem);
+				width: 95%;
+				height: 2.4rem;
+				transform: none;
+			}
+
+			@include respond(xs-desktop) {
+				height: 2.8rem;
+			}
+
+			@include respond(phone) {
+				transform: translate(7.5rem, -30.5rem);
+			}
+
+		}
+
+
+
+	}
+}
+
+.fb_iframe_widget span,
+iframe.fb_iframe_widget_lift,
+.fb_iframe_widget iframe, iframe.twitter-share-button, .share-item, .btn-o, .twitter-share-button{
+    width:80px !important;
+    height:20px !important;
+    position:relative;
+}
+
+
+
+//twitter logo svg
+.svg-inline--fa.fa-w-16 {
+	width: 3rem;
+	height: 2rem;
+}
+
+

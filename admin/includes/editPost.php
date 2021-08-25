@@ -1,6 +1,6 @@
 <?php
 if(isset($_GET['p_id'])) {
-$get_post_id = clean($_GET['p_id']);
+$get_post_id = $_GET['p_id'];
 }
  // $query = "SELECT * FROM posts WHERE post_id = $get_post_id";
  //   $select_posts_by_id = mysqli_query($connection, $query);
@@ -14,6 +14,7 @@ mysqli_stmt_execute($stmt);
 mysqli_stmt_bind_result($stmt, $post_id, $post_author, $post_title, $post_category_id, $post_status, $post_image, $post_tags, $post_content, $post_comment_count, $post_date);
 mysqli_stmt_store_result($stmt);
 mysqli_stmt_fetch($stmt);
+$post_contents = file_get_contents('../'.$post_content, FILE_USE_INCLUDE_PATH);
 mysqli_stmt_close($stmt);
 
 ?>
@@ -22,24 +23,38 @@ mysqli_stmt_close($stmt);
 
 if(isset($_POST['update_post'])) {
 
-$post_author = clean($_POST['post_author']);
-$post_title = clean($_POST['post_title']);
-$post_category_id = clean($_POST['post_category_id']);
-$post_category = clean($_POST['post_category']);
-$post_status = clean($_POST['post_status']);
+$post_author = $_POST['post_author'];
+$post_title = $_POST['post_title'];
+$post_category_id = $_POST['post_category_id'];
+$post_category = $_POST['post_category'];
+$post_status = $_POST['post_status'];
 $post_image = $_FILES['post_image']['name'];
 $post_image_temp = $_FILES['post_image']['tmp_name'];
-$post_tags = clean($_POST['post_tags']);
-$post_content= clean($_POST['post_content']);
-$post_comment_count = clean($_POST['post_comment_count']);
-$post_date = clean($_POST['post_date']);
+$post_tags = $_POST['post_tags'];
+$post_content= $_POST['post_content'];
+$post_comment_count = $_POST['post_comment_count'];
+$post_date = $_POST['post_date'];
+
+
 
 
      // move_uploaded_file($post_image_temp, "../images/$post_image");
-     if(empty($post_image)) {
 
-     	// $query = "SELECT post_image FROM posts WHERE post_id = $get_post_id";
-     	// $select_image = mysqli_query($connection,$query);
+
+
+$target_dir = "../images/";
+$target_file = $target_dir . basename($_FILES['post_image']['name']);
+$allowedExts = array("gif", "jpeg", "jpg", "png");
+$pointerResult = explode(".", $_FILES["post_image"]["name"]);
+$extension = end($pointerResult);
+if ((($_FILES["post_image"]["type"] == "image/gif")
+|| ($_FILES["post_image"]["type"] == "image/jpeg")
+|| ($_FILES["post_image"]["type"] == "image/jpg")
+|| ($_FILES["post_image"]["type"] == "image/png"))
+&& ($_FILES["post_image"]["size"] < 20000)
+&& in_array($extension, $allowedExts)){
+        if(empty($post_image)) {
+
         $query = "SELECT post_image FROM posts WHERE post_id = ?";
         $stmt = mysqli_stmt_init($connection);
         mysqli_stmt_prepare($stmt, $query);
@@ -48,16 +63,42 @@ $post_date = clean($_POST['post_date']);
         mysqli_stmt_bind_result($stmt, $post_image);
         mysqli_stmt_store_result($stmt);
         mysqli_stmt_fetch($stmt);
+ }
 
+}
 
-     	// while($row = mysqli_fetch_array($select_image)) {
-     	// 	$post_image = $row['post_image'];
-     	// }
-  
-     }
-    
+     // $fileInfo = @getimagesize($_FILES['post_image']['tmp_name']);
+    // $width = $fileInfo[0];
+    // $height = $fileInfo[1];
+    // $allowed_image_extension = array(
+    //     "png",
+    //     "jpg",
+    //     "jpeg"
+    // );
 
-
+  //   $file_extension = pathinfo($_FILES['post_image']['name'], PATHINFO_EXTENSION);
+  //   // Validate file input to check if is not empty
+  //   if (! file_exists($_FILES['post_image']['tmp_name'])) {
+  //       $response = array(
+  //          die("Choose image file to upload.")
+  //       );
+  //   }    // Validate file input to check if is with valid extension
+  //   else if (! in_array($file_extension, $allowed_image_extension)) {
+  //       $response = array(
+  //          die("Upload valid images. Only PNG and JPEG are allowed.") 
+  //       );
+  //       echo $result;
+  //   }    // Validate image file size
+  //   else if (($_FILES['post_image']['size'] > 2000000)) {
+  //       $response = array(
+  //          die("Image size exceeds 2MB")
+  //       );
+  //   }    // Validate image file dimension
+  //   else if ($width > "600" || $height > "600") {
+  //       $response = array(
+  //           die("Image dimension should be within 600X600")
+  //       );
+  // } 
      // $query = "UPDATE posts SET ";
      // $query .="post_title = '{$post_title}', ";
      // $query .="post_category_id = '{$post_category}', ";
@@ -71,21 +112,30 @@ $post_date = clean($_POST['post_date']);
 
      // $updatePost = mysqli_query($connection, $query);
      // queryConnect($updatePost);
-     
 
-     //if there is a mysqli way to creat  a variable that stores the SQL now() function, we can get the date to work correctly. now() isn't a php function. we can try to use something like this.....     $now = date_create()->format('y-m-d');     instead. 
-     $query = "UPDATE posts SET post_title = ?, post_category_id = ?, post_date = ?, post_author = ? , post_status = ?, post_tags = ?, post_content = ?, post_image = ? WHERE post_id = ?"; 
+    $newFileName = '../articles/'.camelCase($post_title).".php";
+  
+
+  if (file_put_contents($newFileName, $post_content) !== false) {
+      echo "<p class='bg-success'>File updated (" . basename($newFileName) . ")</p>";
+  } else {
+      echo "<p class='bg-success'>Cannot update file (" . basename($newFileName) . ")</p>";
+  }
+      
+     $query = "UPDATE posts SET post_title = ?, post_category_id = ?, post_date = ?, post_author = ?, post_status = ?, post_tags = ?, post_image = ? WHERE post_id = ?"; 
      date_default_timezone_set('America/Los_Angeles');
-     $now = date('Y-m-d');
+     // $now = date('Y-m-d');
+     
 
      $stmt = mysqli_stmt_init($connection);
      mysqli_stmt_prepare($stmt, $query);
-     mysqli_stmt_bind_param($stmt, 'sissssssi', $post_title, $post_category_id, $now, $post_author, $post_status, $post_tags, $post_content, $post_image, $post_id);
+     mysqli_stmt_bind_param($stmt, 'sisssssi', $post_title, $post_category_id, $post_date, $post_author, $post_status, $post_tags, $post_image, $post_id);
      mysqli_stmt_execute($stmt);
      mysqli_stmt_close($stmt);
      echo "<p class='bg-success'>Post Updated. <a href='../post.php?p_id={$get_post_id}'>View Post, </a> or <a href='posts.php'>Edit More Posts</a></p>";
 
 }
+
 ?>
 
 
@@ -161,8 +211,9 @@ queryConnect($select_categories);
 		<input value="<?php echo $post_date; ?>" type="text" class="form-control" name="post_date">
 	</div>
 	<div class="form-group">
+    <div id="toolbar-container"></div>
 		<label for="post_content">Post Content </label>
-		<textarea type="text" class="form-control" name="post_content" id="body" cols="30" rows="10"><?php echo $post_content; ?>
+		<textarea type="text" class="form-control tinymce" name="post_content" id="editor" cols="30" rows="10"><?php echo $post_contents?>
 		</textarea>
 	</div>
 

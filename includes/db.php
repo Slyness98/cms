@@ -1,8 +1,8 @@
 <?php
 $db['db_host'] = "localhost";
-$db['db_user'] = "root";
-$db['db_pass'] = "";
-$db['db_name'] = "cms";
+$db['db_user'] = "tyuskumy_seth";
+$db['db_pass'] = "[!NF?;{_cT=J";
+$db['db_name'] = "tyuskumy_cmsTest";
 //db array of constants being defined. More secure way of passing db keys through mysqli_connect.
 foreach ($db as $key => $value) {
 	define(strtoupper($key), $value);

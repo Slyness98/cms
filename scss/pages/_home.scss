@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700');
+ h1 {
+	font-family: 'Gruppo';
+}
+
+@include offset;
+
+
+//=========HOME SECTION ==========
+
+.home {
+	height: 20%;
+	display: flex;
+	justify-content: center;
+
+	@include respond(sm-desktop){
+		height: 25%;
+	}
+		
+	@include respond(tab-land){
+		height: 25%;
+	}
+	
+}
+// .home-inner {
+// 	background-image: radial-gradient(
+//     				  rgba(30,180,180,.65), 
+//    					  rgba(30, 180, 167, .7)),
+//    					  url('../images/particles.jpg');
+
+// 	z-index: -1;
+// 	background-size: cover;
+// 	back ground-position: top;
+
+// }
+
+
+
+//===========  ARTICLES SECTION =============================
+
+#articles {
+// margin-top: .8rem;
+//background-image: radial-gradient(rgba($color-primary-dull, .65), rgba($color-primary-dull, .7));
+background-image: linear-gradient($color-primary-dark, $color-grey191);
+transform: translateY(4rem);
+// clip-path: polygon(0 12%, 100% 0.1%, 100% 100%, 0 100%);
+clip-path: polygon(0 6.5%, 100% 0.2%, 100% 96%, 0 96%);
+
+@include respond(tab-land) {
+	// clip-path: polygon(0 1.5%, 100% 0.2%, 100% 96%, 0 96%);
+}
+}
+//======RESOURCES SECTION ==========================================
+.carousel-indicators {
+	position: absolute;
+	bottom: 20%;
+
+	& li {
+		background-color: $color-primary;
+		padding: .1rem;
+		transition: all linear .5s;
+		&:hover {
+			padding: .2rem;
+			transition: all ease .3s;
+		}
+
+		
+	}
+
+}
+
+
+.carousel-item {
+	height: 100vh;
+	display: flex;
+	justify-content: flex-start;
+}
+
+[class^="carousel-control"] {
+	position: absolute;
+	top: 50%;
+	height: 4rem;
+	width: 4rem;
+}
+
+
+
+
+.jumbotron {
+	margin-bottom: 0;
+	padding: 3.5rem 0rem 2rem 0rem;
+
+	&--articles {
+		//transform: skewY(-2.5deg) translateY(3rem);
+		transform: skewY(-2.5deg);
+		box-shadow: 0rem -.2rem;
+		background-color: #bfbfbf;
+
+		&-wrapper {
+			//transform: skewY(2.5deg) translate(-.7rem, -.55rem);
+			transform: skewY(2.5deg);
+			box-shadow: -.2rem -.2rem 2px 2px;
+			// padding-right: 2rem;
+			background-image: linear-gradient(rgba($color-primary-dull2, .4), rgba($color-primary-dull, .75));
+		}
+	}
+
+	&--resources {
+		margin-top: 1rem;
+		border-top: double cyan;
+	}
+}
+
+
+.resources {
+	position: absolute;
+	
+
+
+
+
+	&-list{
+	position: relative;
+	font-size: 1.8rem;
+	color: $color-primary;
+	
+	
+		&-inner{
+			// padding-left: 30rem;
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: flex-start;
+			margin-bottom: 0;
+			@include respond(tab-land){
+				flex-flow: row nowrap;
+			}
+			
+		}
+
+			&-container{
+			padding-left: 23rem;
+
+			@include respond(sm-desktop) {
+				padding-left: 13rem;
+			}
+
+			@include respond(xs-desktop) {
+				padding-left: 13rem;
+			}
+
+			@include respond(tab-land){
+				padding-left: 11rem;
+			}
+
+			@include respond(phone) {
+				padding-left: 0rem;
+				transform: translateX(7rem);
+			}
+		}
+
+
+		&-item{
+			padding-top: 5rem;
+			height: 1.8rem;
+			// -webkit-touch-callout: none !important;
+			// &:not(:first-child) {
+			// 	padding-top: 3rem;
+			// }
+		}
+		
+
+	}
+	
+	
+		
+		
+
+		
+	
+	
+	&-link, &-link:hover, &-link:active {
+		@include clearfix;
+		position: relative;
+		color: #fff;
+		transition: .25s ease; 
+	}
+
+	&-link:hover, &-link:active {
+		padding-left: 3rem;
+
+		@include respond(phone) {
+			padding-left: .5rem;
+		}
+	}
+
+	// // &-link:hover:before{      //Arrow element of tooltip on hover
+	//     border: solid;
+	//     // border-color: #fff transparent; 
+	//     border-color: transparent $color-primary; 
+	//     border-width: 1rem 0 0 1rem;
+	//     bottom: 20px;
+	//     content: "";
+	//     left: 150%;
+	//     bottom: 10%;
+	//     position: absolute;
+	//     z-index: 99;
+	// }
+
+	&-link:hover:after, &:active:after, &-link:focus-within:after{ //tooltip description container created on hover
+	    background: #333;
+	    background: rgba(30,30,30,.8);
+	    border-radius: 5px;
+	    color: white;
+	    font-size: 1rem;
+	    content: attr(tooltip); //grabs custom tooltip attribute in list item link for description display
+	    left: 100%;
+	    top: 15%;
+	    padding: 0 .5rem;
+	    position: absolute;
+	    z-index: 98;
+	    width: 20rem;
+	    height: auto;
+	    
+		
+	    @include respond(phone) {
+	    	width: 10rem;
+	    	left: 125%;
+	    	font-size: 1.5rem;
+	    }
+	}
+
+	&-link span {
+		// padding-right: 6rem;
+	}
+
+	
+}
+
+article {
+  -webkit-column-count: 4;
+  -moz-column-count: 4;
+  column-count: 4;
+}
+
+
+#resources {
+
+}

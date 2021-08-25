@@ -1,0 +1,62 @@
+.heading {
+		font-size: 1.9rem;
+		font-weight: 700;
+		text-align: center;
+		margin-bottom: 1.9rem;
+		
+		&-underline{
+			width: 3rem;
+			height: .2rem;
+			background-color: $color-primary;
+			margin: 0 auto;
+			margin-bottom: 2rem;
+
+			&--registration {
+				transform: translate(-29rem, 39rem);
+
+				@include respond(sm-desktop) {
+					transform: translate(-14rem, 18rem);
+				}
+			}
+		}
+
+		&--registration {
+				transform: translate(-29rem, 40rem);
+				color: $color-grey51;
+				font-size: 2.2rem;
+
+				@include respond(sm-desktop) {
+					transform: translate(-14rem, 18rem);
+				}
+
+		}
+}
+
+
+.carousel-heading {
+	font-size: 1.9rem;
+	font-weight: 700;
+	text-align: center;
+	color: #fff;
+
+	&-underline {
+		position: relative;
+		background-color: $color-primary-dull;
+		height: .2rem;
+		margin: 0 auto;
+
+//different numbers for different slide title lengths. Width should be the sole property differentiating the different underlines 
+		&-1{
+			width: 27rem;
+		}
+		&-2{
+			width: 20.5rem;
+
+		}
+		&-3{
+			width: 5rem;
+
+		}
+	}
+}
+

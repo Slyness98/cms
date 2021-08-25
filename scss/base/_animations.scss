@@ -1,0 +1,14 @@
+@keyframes typing {
+	from { width: 0;}
+	to {width: 100%;}
+
+	// @include respond(phone) {
+	// 	from { width: 0;}
+	// to {width: 11%;}
+	// }
+}
+
+@keyframes blinking-cursor {
+  from, to { border-color: transparent }
+  50% { border-color: $color-magenta; }
+}

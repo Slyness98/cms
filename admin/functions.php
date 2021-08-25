@@ -30,6 +30,19 @@ function selectQuery($column, $table){
 
 
 
+ 
+function camelCase($str, $noStrip = []){
+        // non-alpha and non-numeric characters become spaces
+        $str = preg_replace('/[^a-z0-9' . implode("", $noStrip) . ']+/i', ' ', $str);
+        $str = trim($str);
+        // uppercase the first character of each word
+        $str = ucwords($str);
+        $str = str_replace(" ", "", $str);
+        $str = lcfirst($str);
+
+        return $str;
+}
+
 
 
 
@@ -180,7 +193,7 @@ function selectQuery($column, $table){
                            if(!$stmt){
                             die("Query Failed to Update". mysqli_error($connection));
                            }
-                          header("Location:categories.php");
+                          header("Location: categories.php");
                         }
                       ?>
                                                     
@@ -190,7 +203,7 @@ function selectQuery($column, $table){
                                 </div>
                                 <div class="form-group"> 
                                  <input class="btn btn-warning"  type="submit" name="cancelUpdate" value="Cancel">
-                                 <?php if(isset($_POST['cancelUpdate'])) {header("Location:categories.php");}   //if we click the cancel btn we back out to categories.php without the $_GET['edit'] in the URL, rendering the editCategories function inactive on the parent page, admin/categories.php
+                                 <?php if(isset($_POST['cancelUpdate'])) {header("Location: categories.php");}   //if we click the cancel btn we back out to categories.php without the $_GET['edit'] in the URL, rendering the editCategories function inactive on the parent page, admin/categories.php
 
 
                                  ?>
@@ -203,14 +216,6 @@ function selectQuery($column, $table){
                         } //end editCategories() 
                        ?> 
 
-
-
-
-
-
-
-
-<!-------------------------------- Functions for CMS's comment functionality and management------------------------------------------------------------------------- -->
 
 
 
@@ -368,7 +373,7 @@ function updateUser(){
 function deleteUser(){
     global $connection;
   
-$get_user_id = clean($_GET['delete']); //this looks weird but this is actually what we need in lieu of "WHERE user_id = {$user_id}". The delete parameter already carries the exact user id we need. If you use regular $user_id, it deletes the previous user instead, for some reason.
+$get_user_id = clean($_GET['delete']); //this looks weird because we're grabbing the delete URL parameter rather than the u_id URL parameter, but this is actually what we need in lieu of the normal "WHERE user_id = {$user_id}". The delete parameter already carries the exact user id we need. If you use regular $user_id, it deletes the previous user instead, for some reason.
  
 
 $deleteQuery = "DELETE FROM users WHERE user_id = ?";
@@ -385,9 +390,77 @@ header("Location: users.php");
 
 
 
+//----------------  Resource Section Functions -----------------------------------------
+
+function updateResource() {
+  global $connection;
+    $get_resource_id = clean($_GET['resource_id']);
+     $resource_id = clean($_POST['resource_id']);
+     $resource_name = clean($_POST['resource_name']);
+     $resource_url = clean($_POST['resource_url']);
+     $resource_description = clean($_POST['resource_description']);
+     $resource_slide =  clean($_POST['resource_slide']);
+     $resource_column =  clean($_POST['resource_column']);
+
+      $query = "UPDATE resources SET resource_id = ?, resource_name = ?, resource_url = ?, resource_description = ?, resource_slide = ?, resource_column = ? WHERE resource_id = ?";
+
+    $stmt = mysqli_stmt_init($connection);
+    mysqli_stmt_prepare($stmt, $query);
+    mysqli_stmt_bind_param($stmt, 'isssiii', $resource_id, $resource_name, $resource_url, $resource_description, $resource_slide, $resource_column, $get_resource_id);
+    mysqli_stmt_execute($stmt);
+
+     echo "<p class='bg-success'>Resource Updated. <a href='../admin/resources.php'>Back to resources table</a></p>";
+     mysqli_stmt_close($stmt);
+}
+
+
+function deleteResource() {
+  global $connection;
+  $get_resource_id = clean($_GET['delete']);
+
+  $deleteQuery = "DELETE FROM resources WHERE resource_id = ?";
+ $stmt = mysqli_stmt_init($connection);
+ mysqli_stmt_prepare($stmt, $deleteQuery);
+ mysqli_stmt_bind_param($stmt,'i',$get_resource_id);
+ mysqli_stmt_execute($stmt);
+ if (!$stmt) {
+  die("Query failed. " . mysqli_error($connection));
+ }
+ mysqli_stmt_close($stmt);
+header("Location: resources.php");
+}
 
 
 
+function queryResources($slide, $column) {
+  global $connection;
+
+  $stmt = mysqli_stmt_init($connection);
+                  $resource_slide = $slide;
+                  $resource_column = $column;
+
+                  $query = "SELECT resource_id, resource_name, resource_url, resource_description, resource_slide, resource_column FROM resources WHERE resource_slide=? && resource_column=?";
+
+                  mysqli_stmt_prepare($stmt, $query);
+
+                mysqli_stmt_bind_param($stmt, 'ii', $resource_slide , $resource_column);
+
+                mysqli_stmt_execute($stmt);
+
+                mysqli_stmt_bind_result($stmt, $resource_id, $resource_name, $resource_url, $resource_description, $resource_slide, $resource_column);
+                mysqli_stmt_store_result($stmt);
+                while(mysqli_stmt_fetch($stmt)):
+
+                  echo"<li class='resources-list-item'>
+                  <a href='$resource_url' tooltip='$resource_description' class='resources-link'>
+
+                  <span>$resource_name</span>
+                </a>
+                </li>";
+                endwhile;
+              mysqli_stmt_close($stmt);
+
+}
 
 
 // -------------------------------------------Stat Funtions--------------------------------------------------------------------------
@@ -419,7 +492,33 @@ function customContentCount($table, $column, $value){
 }
 
 
-
+function TimeAgo ($oldTime, $newTime) {
+$timeCalc = strtotime($newTime) - strtotime($oldTime);
+if ($timeCalc >= (60*60*24*30*12*2)){
+ $timeCalc = intval($timeCalc/60/60/24/30/12) . " years ago";
+ }else if ($timeCalc >= (60*60*24*30*12)){
+ $timeCalc = intval($timeCalc/60/60/24/30/12) . " year ago";
+ }else if ($timeCalc >= (60*60*24*30*2)){
+ $timeCalc = intval($timeCalc/60/60/24/30) . " months ago";
+ }else if ($timeCalc >= (60*60*24*30)){
+ $timeCalc = intval($timeCalc/60/60/24/30) . " month ago";
+ }else if ($timeCalc >= (60*60*24*2)){
+ $timeCalc = intval($timeCalc/60/60/24) . " days ago";
+ }else if ($timeCalc >= (60*60*24)){
+ $timeCalc = " Yesterday";
+ }else if ($timeCalc >= (60*60*2)){
+ $timeCalc = intval($timeCalc/60/60) . " hours ago";
+ }else if ($timeCalc >= (60*60)){
+ $timeCalc = intval($timeCalc/60/60) . " hour ago";
+ }else if ($timeCalc >= 60*2){
+ $timeCalc = intval($timeCalc/60) . " minutes ago";
+ }else if ($timeCalc >= 60){
+ $timeCalc = intval($timeCalc/60) . " minute ago";
+ }else if ($timeCalc > 0){
+ $timeCalc .= " seconds ago";
+ }
+return $timeCalc;
+}
 
 
 

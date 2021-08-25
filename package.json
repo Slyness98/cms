@@ -1,0 +1,21 @@
+{
+  "name": "cms",
+  "version": "1.0.0",
+  "description": "Portfolio Blog CMS ",
+  "main": "index.js",
+  "scripts": {
+    "compile:sass": "node-sass scss/main.scss css/style.css -w",
+    "watch:sass": "nodemon -e scss -x \"npm run compile:sass\""
+  },
+  "author": "Seth Lyness",
+  "license": "ISC",
+  "devDependencies": {
+    "node-sass": "^4.12.0",
+    "nodemon": "^1.19.1"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "npm": "^6.10.2",
+    "sass": "^1.22.9"
+  }
+}

@@ -41,26 +41,46 @@
                         <a href="index.php"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
                  
-               <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#posts_dropdown"><i class="fa fa-fw fa-arrows-v"></i> Posts<i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="posts_dropdown" class="collapse">
+                    <br>
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#posts_dropdown"><i class="fa fa-fw fa-book"></i> Posts<i class="fa fa-fw fa-caret-down"></i></a>
+                            <ul id="posts_dropdown" class="collapse">
+                                <li>
+                                    <a href="posts.php">View Posts</a>
+                                </li>
+                                <li>
+                                    <a href="posts.php?source=add_post">Add New Post</a>
+                                </li>
+                            </ul>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="categories.php"><i class="fa fa-fw fa-list-ul"></i> Categories</a>
+                    </li>
+                    
+
+                    <li>
+                        <a href="comments.php"><i class="fa fa-fw fa-comments-o"></i> Comments</a>
+                    </li>
+
+
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-code"></i> Resources <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="demo" class="collapse">
                             <li>
-                                <a href="posts.php">View Posts</a>
+                                <a href="resources.php">View Resources</a>
                             </li>
                             <li>
-                                <a href="posts.php?source=add_post">Add New</a>
+                                <a href="resources.php?source=addResource">Add A Resource</a>
                             </li>
                         </ul>
                     </li>
+                    
+                    
                     <li>
-                        <a href="categories.php"><i class="fa fa-fw fa-wrench"></i> Categories</a>
-                    </li>
-                     <li>
-                        <a href="comments.php"><i class="fa fa-fw fa-file"></i> Comments</a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Users <i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="demo" class="collapse">
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo1"><i class="fa fa-fw fa-users"></i> Users <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="demo1" class="collapse">
                             <li>
                                 <a href="users.php">View Users</a>
                             </li>
@@ -69,7 +89,9 @@
                             </li>
                         </ul>
                     </li>
-                  <li>
+                  
+
+                    <li>
                         <a href="profile.php"><i class="fa fa-fw fa-dashboard"></i> Profile</a>
                     </li>
                 </ul>

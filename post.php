@@ -1,22 +1,19 @@
+<?php require 'vendor/autoload.php';?>
 <?php include "includes/header.php"; ?>
+
     <!-- Navigation -->
    
-<?php include "includes/navigation.php"; ?>
-    <!-- Page Content -->
-    <div class="container">
+<?php include "includes/nav.php"; ?>
 
-        <div class="row">
-
-            <!-- Blog Entries Column -->
-            <div class="col-md-8">
-        <?php 
-        if(isset($_GET['p_id'])){
-        $post_id = clean($_GET['p_id']);  
-        }
-        
-
-        
-                
+<!-- Page Content -->
+<div class="container post-container">
+	<div class="row post-inner">
+		<!-- Blog Entries Column -->
+		<div class="col-md-10">
+	        <?php 
+	        if(isset($_GET['p_id'])){
+	        $post_id = clean($_GET['p_id']);  
+	        }
                 // $query = "SELECT * FROM posts WHERE post_id = $post_id";
 
                 // $query_all_posts = mysqli_query($connection, $query);
@@ -35,34 +32,35 @@
             mysqli_stmt_bind_result($stmt, $post_id, $post_author, $post_title, $post_category_id, $post_status, $post_image, $post_tags, $post_content, $post_comment_count, $post_date);
             mysqli_stmt_store_result($stmt);
 
-              while(mysqli_stmt_fetch($stmt)){
+              while(mysqli_stmt_fetch($stmt)):
             ?>
-              <h1 class="page-header">
-                Latest Posts
-             <small>Secondary Text</small>
-            </h1>
+            
             <!-- Blog Post Structure -->
-            <h2>
-                <a href="#"><?php echo $post_title; ?></a>
+            <h2 class="post-item text-center">
+                <?php echo $post_title;?>
             </h2>
-            <p class="lead">
-                by <a href="about.php"> <?php echo $post_author ?> </a>
+            <p class="lead post-item">
+                by  <a class="post-link pl-2" href="about.php"> <?php echo $post_author;?> </a>
             </p>
-            <p><span class="glyphicon glyphicon-time"></span> Posted on <?php echo $post_date; ?></p>
+            <p class="post-item"><span class="glyphicon glyphicon-time"></span> Posted on <?php echo $post_date; ?></p>
+            <?php include "includes/shareBar.php"; ?>
             <hr>
-            <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="featured post image">
+            <div class="container">
+              <div class="col-12 d-flex justify-content-center">
+                <img class="img-responsive post-img" src="../images/<?php echo $post_image; ?>" alt="featured post image">
+              </div>
+            </div>
             <hr>
-            <p><?php echo $post_content; ?></p>
+            <p class="post-item text-body"><!-- <?php echo $post_content;?> --><?php echo file_get_contents($post_content, FILE_USE_INCLUDE_PATH)?></p>
             
 
             <hr>
-            <?php }  //closes off the while loop querying all post information. The HTML code is now automatically replecated for each new post by being encased in this loop.?>
+            <?php endwhile;
+             mysqli_stmt_close($stmt);?>
             </div>
         
-            <!-- Blog Sidebar Widgets Column -->
-            <?php include "includes/sidebar.php"; ?>
-          </div>
-            <!-- /.row -->
+      </div>
+      <!-- /.row -->
  <hr>
 
 
@@ -110,22 +108,22 @@ if(isset($_POST['create_comment'])){
 
 ?>
          <!-- comment form -->
-            <div class="well">
+            <div class="jumbotron comment-section">
             <form action="" method="post" role="form">
-                <h4>We'd love to hear from you! Drop a comment!</h4>
+                <h4 class="comment-heading">We'd love to hear from you! Drop a comment! </h4>
               <div class="form-group">
               <label for="author">Author</label>
-              <input type="text" class="form-control" name="comment_author" placeholder="Your username">
+              <input type="text" class="form-control" name="comment_author" placeholder="Your username" required>
               </div>
 
               <div class="form-group">
               <label for="email">Email</label>
-              <input type="email" class="form-control" name="comment_email" placeholder="youremail@example.com">
+              <input type="email" class="form-control" name="comment_email" placeholder="youremail@example.com" required>
               </div>
 
               <div class="form-group">
               <label>Your Comment</label>
-              <textarea class="form-control" rows="5" name="comment_content"></textarea>
+              <textarea class="form-control" rows="5" name="comment_content" required></textarea>
               </div>
               
 
@@ -134,7 +132,7 @@ if(isset($_POST['create_comment'])){
               </div>
             
             </form>
-            </div>
+            
          <br>
 
          <!-- Start of existing comment forum -->
@@ -178,23 +176,10 @@ if(isset($_POST['create_comment'])){
           }
           mysqli_stmt_close($stmt);  
         ?>
-
-                <!-- Comment -->
-               
-                        <!-- Nested Comment -->
-                        <div class="media">
-                            <a class="pull-left" href="#">
-                                <img class="media-object" src="http://placehold.it/64x64" alt="">
-                            </a>
-                            <div class="media-body">
-                                <h4 class="media-heading">Nested Start Bootstrap
-                                    <small>August 25, 2014 at 9:30 PM</small>
-                                </h4>
-                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                            </div>
-                        </div>
-                        <!-- End Nested Comment -->
-                    </div>
-                
+    </div>
+<div class="footer-wrapper">        
 <?php include 'includes/footer.php'; ?>
- <!--footer.php includes closing div for <div class="container">. I felt it was better to only have the seemingly unclosed "container" class instance twice (once in search.php and once in index.php) than to open the class at the end of header.php across the entire CMS, should I ever need to change classes of the outermost div for a certain page. It's best to end header.php with the start of the <body> tag.        
+</div>  
+ <!--footer.php includes closing div for <div class="container">. I felt it was better to only have the seemingly unclosed "container" class instance twice (once in search.php and once in index.php) than to open the class at the end of header.php across the entire CMS, should I ever need to change classes of the outermost div for a certain page. It's best to end header.php with the start of the <body> tag. -->
+
+ </div> 

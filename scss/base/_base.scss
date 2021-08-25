@@ -1,0 +1,73 @@
+
+*,
+*::after,
+*::before {
+	margin: 0px;
+	padding: 0px;
+	box-sizing: inherit; /*force box-sizing property to be an inherited property amongst all selectors, effectively changing its default behavior. Our root for this property is now what we declare in the body selector */
+}
+
+[class*="col-"] {
+	padding: 1rem;
+	@include respond(tab-land) {
+		padding: 0;	}
+}
+
+html {
+	font-size: 62.5%; /*Declare default font-size here so we can easily scale all padding and related font-sizing with rem values from here on out. The base responsive sizing is declared in em and we can now consistently use rem for predictability everywhere else. 
+						We use 62.5% because we want to take the browser default of 16px and bring it down to a default of ten. 
+			 			This just changes the definition of what a rem unit is, and thus provides an easily scaleable base*/
+	
+	scroll-behavior: smooth;
+
+	@include respond(md-desktop) {
+		
+	}
+	
+	@include respond(sm-desktop) {// width < 992?
+		//don't re-declare font size. We'll just stick to the same 10px as the default style
+	}
+
+	@include respond(xs-desktop) {// width < 848?
+		font-size: 56.25%;
+	}
+
+	@include respond(tab-land) { //width < 768?
+		font-size: 56.25%; //1 rem = 9px, 9/16 = 56.25%
+	}
+
+	@include respond(tab-port) {// width < 562?
+		font-size: 50%; //1 rem = 8px, 8/16 = 50%
+	}
+
+	
+	@include respond(phone) {// width < 480?
+		font-size: 37.5%; //1 rem = 6px, 6/16 = 37.5%
+	}
+
+	@include respond(big-desktop) { //width > 1200?
+		font-size: 75%; //1rem = 12px, 12/16 = 75%
+	}
+}
+
+body {
+	box-sizing: border-box; /* Padding and border no longer included when we express size for elements. This is the only structural property included in the body. All other styles are typography related and thus can be found in _typograhy.scss */
+	padding: 0;
+	background-color: $color-primary-dull2;
+	// background-image: radial-gradient(
+ //    				  rgba($color-primary-dull,.65), 
+ //   					  rgba($color-primary-dull, .7));
+	
+	@include respond(tab-port) {// width < 600?
+		padding: 0; //1 rem = 8px, 8/16 = 50%
+	}
+
+}
+
+.row{
+	&-home {
+		height: 100%;
+		display: flex;
+		justify-content: center;
+	}
+}

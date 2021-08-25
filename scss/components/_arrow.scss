@@ -1,0 +1,89 @@
+.bounce { /*arrow bouncing duration*/
+  -moz-animation: bounce 2s infinite;
+  -webkit-animation: bounce 2s infinite;
+  animation: bounce 2s infinite;
+}
+.arrow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-left: -1.0rem;
+  margin-bottom: 3rem;
+  width: 6rem;
+  height: 5rem; /*change with size of arrow to make it sit on bottom of page*/
+
+  @include respond(phone) {
+    height: 7rem;
+    bottom: -8%;
+  }
+}
+a.down-arrow {
+  display: block;
+  color: $color-primary; /*arrow color*/
+}
+.down-arrow svg.svg-inline--fa {
+  // opacity: .3; /*arrow opacity*/
+  font-size: 3.2rem; /*arrow size*/
+
+  @include respond(tab-land) {
+    font-size: 3.55rem;
+  }
+  @include respond(tab-port) {
+    font-size: 4rem;
+  }
+  @include respond(phone) {
+    font-size: 6rem;
+  }
+}
+.down-arrow svg.svg-inline--fa:hover {
+  // opacity: .5; /*arrow hover opacity*/
+  color: $color-primary-bright;
+}
+@-moz-keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    -moz-transform: translateY(1.5rem);
+    transform: translateY(1.5rem);
+  }
+  40% {
+    -moz-transform: translateY(-3.0rem);
+    transform: translateY(-3.0rem);
+  }
+  60% {
+    -moz-transform: translateY(-1.5rem);
+    transform: translateY(-1.5rem);
+  }
+}
+@-webkit-keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(1.5rem);
+    transform: translateY(1.5rem);
+  }
+  40% {
+    -webkit-transform: translateY(-3.0rem);
+    transform: translateY(-3.0rem);
+  }
+  60% {
+    -webkit-transform: translateY(-1.5rem);
+    transform: translateY(-1.5rem);
+  }
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    -moz-transform: translateY(1.5rem);
+    -ms-transform: translateY(1.5rem);
+    -webkit-transform: translateY(1.5rem);
+    transform: translateY(1.5rem);
+  }
+  40% {
+    -moz-transform: translateY(-3.0rem);
+    -ms-transform: translateY(-3.0rem);
+    -webkit-transform: translateY(-3.0rem);
+    transform: translateY(-3.0rem);
+  }
+  60% {
+    -moz-transform: translateY(-1.5rem);
+    -ms-transform: translateY(-1.5rem);
+    -webkit-transform: translateY(-1.5rem);
+    transform: translateY(-1.5rem);
+  }
+}

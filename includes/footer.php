@@ -1,29 +1,23 @@
 <!-- Footer -->
-        <footer>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright &copy; Your Website 2019</p>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-        </footer>
 
-    </div>
-    <!-- /.container -->
-    
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.bundle.min"></script>
+    <?php 
+       $current_file = $_SERVER['PHP_SELF'];  
+       switch($current_file){
+        case "/side_projects/cmsTest/index.php":
+        include "footers/indexFooter.php";   
+        break;
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-    <script>
-    $(document).ready(function () {
-        $('.dropdown-toggle').dropdown();
-    });
-</script>
+        case "/side_projects/cmsTest/post.php":
+        include "footers/postFooter.php";   
+        break;
 
-</body>
+        case "/side_projects/cmsTest/postsByCategory.php":
+        include "footers/postFooter.php";   
+        break;
 
-</html>
+        case "/side_projects/cmsTest/registration.php":
+        include "footers/indexFooter.php";   
+        break;
+       } 
+    ?>
+   

@@ -1,7 +1,7 @@
 <?php include "includes/header.php"; ?>
     <!-- Navigation -->
    
-<?php include "includes/navigation.php" ?>
+<?php include "includes/nav.php" ?>
 <?php  
     $query = "SELECT * FROM categories";
     $query_all_categories = mysqli_query($connection,$query);
@@ -19,7 +19,7 @@
         <div class="row">
 
             <!-- Blog Entries Column -->
-            <div class="col-md-8">
+            <div class="col-md-12">
             <h1 class="page-header">
                 Categories
              <small>Secondary Text</small>
@@ -49,7 +49,7 @@ break;
             </div>
         <hr>
             <!-- Blog Sidebar Widgets Column -->
-            <?php include "includes/sidebar.php"; ?>
+           
           </div>
             <!-- /.row -->
  <hr>

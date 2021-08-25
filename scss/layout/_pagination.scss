@@ -1,0 +1,30 @@
+.pagination {
+	background-color: rgb(200,200,200);
+}
+
+.pager {
+
+	@include respond(sm-desktop) {
+		margin-bottom: 2rem;
+	}
+
+	li {
+		
+		font-size: 1.1rem;
+		font-weight: 700;
+		.active_link {
+			color: $color-primary-dull;
+			border-bottom: 1px solid $color-grey238;
+
+			&:hover {
+				text-decoration: none;
+			}
+		}
+
+	}
+}
+
+
+.nav-link {
+	display: inline-block;
+}

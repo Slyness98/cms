@@ -1,0 +1,14 @@
+{
+    "name": "sethl/cmstest",
+    "type": "project",
+    "require-dev": {
+        "panique/php-sass": "1.0"
+    },
+    "license": "ISC",
+    "authors": [
+        {
+            "name": "Slyness98",
+            "email": "sethlyness@outlook.com"
+        }
+    ]
+}

@@ -2,22 +2,35 @@
 
 if(isset($_POST['create_post'])) {
  
- $post_title =clean($_POST['title']);
- $post_author = clean($_POST['author']);
- $post_category_id = clean($_POST['post_category']);
- $post_status = clean($_POST['post_status']);
+ $post_title =$_POST['title'];
+ $post_author = $_POST['author'];
+ $post_category_id = $_POST['post_category'];
+ $post_status = $_POST['post_status'];
  $post_image = $_FILES['image']['name'];
  $post_image_temp = $_FILES['image']['tmp_name'];
- $post_tags = clean($_POST['post_tags']);
- $post_content=clean($_POST['post_content']);
+ $post_tags = $_POST['post_tags'];
+ $post_content=$_POST['post_content'];
  $post_date = date('y-m-d');
      
-  
      
+
+ 	$newFileName = '../articles/'.camelCase($post_title).".php";
+	
+
+	if (file_put_contents($newFileName, $post_content) !== false) {
+	    echo "<p class='bg-success'>File created (" . basename($newFileName) . ")</p>";
+	} else {
+	    echo "<p class='bg-success'>Cannot create file (" . basename($newFileName) . ")</p>";
+	}
+
+
+
+
+	 $newFileName = 'articles/'.camelCase($post_title).".php";
      $stmt = mysqli_stmt_init($connection);
      $query = "INSERT INTO posts(post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags, post_status) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
      mysqli_stmt_prepare($stmt, $query);
-     mysqli_stmt_bind_param($stmt, 'isssssss', $post_category_id, $post_title, $post_author, $post_date, $post_image, $post_content, $post_tags, $post_status);
+     mysqli_stmt_bind_param($stmt, 'isssssss', $post_category_id, $post_title, $post_author, $post_date, $post_image, $newFileName, $post_tags, $post_status);
      $run = mysqli_stmt_execute($stmt);
      if(!$run){
      	echo "Error creating post";
@@ -87,7 +100,7 @@ queryConnect($select_categories);
 	</div>
 	<div class="form-group">
 		<label for="post_content">Post Content </label>
-		<textarea type="text" class="form-control" name="post_content" id="body" cols="30" rows="10">
+		<textarea type="text" class="form-control tinymce" name="post_content" id="body" cols="30" rows="10">
 		</textarea>
 	</div>
 

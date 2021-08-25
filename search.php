@@ -13,9 +13,11 @@
 
     <?php
     if(isset($_POST['submit'])){
-     $search = $_POST['search'];
+        $search = $_POST['search'];
+       
+     
 
-     $query = "SELECT * FROM posts WHERE post_tags LIKE '%$search%'"; //find posts containing or relating to inputed search phrase
+     $query = "SELECT * FROM posts WHERE post_tags LIKE '%$search%' OR post_title LIKE '%$search%' OR post_author LIKE '%$search%' OR post_content LIKE '%$search%'"; //find posts containing or relating to inputed search phrase
 
      $search_query = mysqli_query($connection, $query);
      if(!$search_query) {
@@ -47,7 +49,7 @@
             <hr>
             <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="featured post image">
             <hr>
-            <p><?php echo $post_content; ?></p>
+            <p><?php echo substr($post_content, 0, 150); ?> </p>
             <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
             <hr>
